@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-cream: #f5f0e8;
+  --color-cream-dark: #ebe5d9;
+  --color-off-white: #faf8f4;
+
+  --color-ink: #1a1a1a;
+  --color-ink-light: #4a4a4a;
+  --color-ink-muted: #8a8a8a;
+
+  --color-brand-dark-teal: #0f4c5c;
+  --color-brand-teal: #1b6f82;
+  --color-brand-light-teal: #2a8fa3;
+  --color-brand-gold: #ffcd05;
+  --color-brand-gold-dark: #e0b400;
+  --color-brand-gold-light: #fff3b0;
+  --color-brand-cream: #fdf8e8;
+
+  --font-heading: "Radio Canada Big", sans-serif;
+  --font-body: "Radio Canada", sans-serif;
+  --font-accent: "Pathway Gothic One", sans-serif;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+::selection {
+  background-color: var(--color-brand-gold);
+  color: var(--color-ink);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-teal);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-dark-teal);
+}
+
+/* Glass morphism card variant */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-brand-gold);
+  outline-offset: 2px;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,127 @@
+import type { Metadata } from "next";
+import { PageHero } from "@/components/ui/page-hero";
+import { Container } from "@/components/ui/container";
+import { Card } from "@/components/ui/card";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, FileText, Shield, Clock } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "E-Journal - Explorations",
+  description: "Explorations: The E-Journal of the South Asian Sociological Society.",
+};
+
+export default function JournalPage() {
+  return (
+    <>
+      <PageHero
+        title="Explorations"
+        subtitle="The E-Journal of the South Asian Sociological Society"
+      />
+
+      <section className="py-24 lg:py-32">
+        <Container>
+          <div className="grid gap-12 lg:grid-cols-[1fr_350px]">
+            {/* Main content */}
+            <div>
+              <SectionHeading
+                label="About the Journal"
+                title="Rigorous Sociological Research"
+              />
+              <div className="space-y-6 text-ink-light leading-relaxed">
+                <p>
+                  <strong className="text-ink">Explorations</strong> is the
+                  official open-access, double-blind peer-reviewed journal of the
+                  South Asian Sociological Society. Published twice yearly in
+                  April and October, it features rigorous sociological research
+                  using quantitative, qualitative, or mixed methods.
+                </p>
+                <p>
+                  The journal focuses on South Asian societies and related topics,
+                  publishing research articles, interviews, commentaries, and
+                  academic debates. Copyright is retained by SASS and authors upon
+                  publication.
+                </p>
+              </div>
+
+              {/* Features Grid */}
+              <div className="grid gap-4 sm:grid-cols-2 mt-8">
+                <Card className="p-5">
+                  <BookOpen className="w-6 h-6 text-brand-teal mb-2" />
+                  <h3 className="font-bold text-ink text-sm">Open Access</h3>
+                  <p className="text-xs text-ink-muted mt-1">
+                    All published articles are publicly accessible.
+                  </p>
+                </Card>
+                <Card className="p-5">
+                  <Shield className="w-6 h-6 text-brand-teal mb-2" />
+                  <h3 className="font-bold text-ink text-sm">Peer Reviewed</h3>
+                  <p className="text-xs text-ink-muted mt-1">
+                    Double-blind peer review process ensures quality.
+                  </p>
+                </Card>
+                <Card className="p-5">
+                  <Clock className="w-6 h-6 text-brand-teal mb-2" />
+                  <h3 className="font-bold text-ink text-sm">Biannual</h3>
+                  <p className="text-xs text-ink-muted mt-1">
+                    Published twice yearly in April and October.
+                  </p>
+                </Card>
+                <Card className="p-5">
+                  <FileText className="w-6 h-6 text-brand-teal mb-2" />
+                  <h3 className="font-bold text-ink text-sm">Multi-format</h3>
+                  <p className="text-xs text-ink-muted mt-1">
+                    Research articles, interviews, commentaries, and debates.
+                  </p>
+                </Card>
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              <Card className="p-6 bg-brand-dark-teal text-white border-none">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-gold mb-3">
+                  Submit Your Work
+                </h3>
+                <p className="text-sm text-white/70 leading-relaxed">
+                  Submissions are restricted to registered, paid SASS members.
+                  Ensure your research aligns with the journal&apos;s scope and
+                  follows our submission guidelines.
+                </p>
+                <a
+                  href="mailto:southasiansociety2@gmail.com?subject=Journal Submission"
+                  className="inline-block mt-4 bg-brand-gold text-ink px-4 py-2 text-sm font-semibold uppercase tracking-wider rounded-sm hover:bg-brand-gold-dark transition-colors"
+                >
+                  Contact for Submission
+                </a>
+              </Card>
+
+              <Card className="p-6">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-gold-dark mb-3">
+                  Featured Publication
+                </h3>
+                <div className="space-y-3">
+                  <div className="p-3 bg-cream rounded-sm">
+                    <Badge variant="gold" className="mb-2">Special Edition</Badge>
+                    <p className="text-sm font-medium text-ink">
+                      SASS Journal: Climate Migration
+                    </p>
+                    <p className="text-xs text-ink-muted mt-1">Published 2025</p>
+                  </div>
+                  <div className="p-3 bg-cream rounded-sm">
+                    <p className="text-sm font-medium text-ink">
+                      Explorations E-Journal
+                    </p>
+                    <p className="text-xs text-ink-muted mt-1">
+                      Primary publication vehicle
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </Container>
+      </section>
+    </>
+  );
+}
