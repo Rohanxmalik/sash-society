@@ -74,7 +74,7 @@ export function FeaturedConference() {
                   <div className="w-9 h-9 rounded-lg bg-brand-gold/10 flex items-center justify-center group-hover/item:bg-brand-gold/20 transition-colors duration-200">
                     <Calendar className="w-4 h-4 text-brand-gold-dark" />
                   </div>
-                  <span>March 8-13, 2026</span>
+                  <span>{event.dateLabel ?? event.date}</span>
                 </div>
                 <div className="flex items-center gap-3 text-ink-light group/item hover:text-ink transition-colors duration-200 cursor-default">
                   <div className="w-9 h-9 rounded-lg bg-brand-gold/10 flex items-center justify-center group-hover/item:bg-brand-gold/20 transition-colors duration-200">
@@ -90,14 +90,7 @@ export function FeaturedConference() {
                   Key Topics
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {[
-                    "Social Change",
-                    "Education & Policy",
-                    "Gender & Equity",
-                    "Technology & Ethics",
-                    "Sustainability",
-                    "Migration & Identity",
-                  ].map((topic) => (
+                  {event.details?.keyTopics.map((topic) => (
                     <span
                       key={topic}
                       className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider border border-ink/12 text-ink-light hover:bg-brand-dark-teal hover:text-white hover:border-brand-dark-teal transition-all duration-300 cursor-default"
@@ -110,7 +103,7 @@ export function FeaturedConference() {
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <Button href={event.registrationUrl || "#"} variant="primary">
-                  Register Now
+                  {event.registrationLabel ?? "Register Now"}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
                 <Button href="/events/upcoming" variant="ghost">

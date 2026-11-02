@@ -20,4 +20,11 @@ export const conferenceChronology: Conference[] = [
     theme:
       "Contemporary Social Transformations: Challenges, Opportunities, and the Way Forward",
   },
+  {
+    number: "IV",
+    year: "2027",
+    venue: "Mauritius",
+    theme:
+      "Artificial Intelligence and Society: Interdisciplinary Perspectives on Human Development, Governance, Innovation and Sustainability",
+  },
 ];

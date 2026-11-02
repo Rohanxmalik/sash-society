@@ -6,8 +6,11 @@ import { StatsBar } from "@/components/ui/stats-bar";
 import { LetterReveal } from "@/components/ui/animated-text";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { upcomingEvents } from "@/data/events";
 
 export function HeroBanner() {
+  const nextEvent = upcomingEvents[0];
+
   return (
     <>
       <section className="relative min-h-screen flex flex-col justify-center bg-cream overflow-hidden pt-20">
@@ -100,7 +103,7 @@ export function HeroBanner() {
             className="mt-8 flex flex-wrap gap-4"
           >
             <Button href="/events/upcoming" variant="primary" size="lg">
-              Singapore 2026 Conference
+              {nextEvent?.shortTitle ?? "Upcoming Events"}
               <ArrowRight className="w-5 h-5" />
             </Button>
             <Button href="/about" variant="outline" size="lg">

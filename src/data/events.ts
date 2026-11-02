@@ -1,6 +1,28 @@
 import type { Event } from "@/types";
+import { mauritius2027Details } from "./mauritius-2027";
 
 export const upcomingEvents: Event[] = [
+  {
+    id: "4th-international-conference",
+    title: "4th International Conference of SASS - Mauritius 2027",
+    shortTitle: "Mauritius 2027 Conference",
+    theme:
+      "Artificial Intelligence and Society: Interdisciplinary Perspectives on Human Development, Governance, Innovation and Sustainability",
+    date: "2027-01-29",
+    endDate: "2027-02-02",
+    dateLabel: "January 29 - February 2, 2027",
+    location: "Curepipe, Mauritius",
+    format: "hybrid",
+    status: "upcoming",
+    registrationUrl:
+      "mailto:southasiansociety2@gmail.com?subject=Registration%20-%204th%20International%20Conference%20Mauritius%202027",
+    registrationLabel: "Contact to Register",
+    image: "/images/events/mauritius-2027.svg",
+    details: mauritius2027Details,
+  },
+];
+
+export const previousEvents: Event[] = [
   {
     id: "3rd-international-conference",
     title: "3rd International Conference of SASS - Singapore 2026",
@@ -10,14 +32,9 @@ export const upcomingEvents: Event[] = [
     endDate: "2026-03-13",
     location: "Singapore",
     format: "hybrid",
-    status: "upcoming",
-    registrationUrl:
-      "https://docs.google.com/forms/d/e/1FAIpQLSfaLt6H8InsSg1W8ct0LYM1BMujYIXmgQsLNBo3xivacGQCxg/viewform",
+    status: "completed",
     image: "/images/events/singapore-2026.svg",
   },
-];
-
-export const previousEvents: Event[] = [
   {
     id: "2nd-international-conference",
     title: "2nd International Conference of SASS - Dubai 2025",

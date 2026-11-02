@@ -6,19 +6,40 @@ export interface CommitteeMember {
   location?: string;
 }
 
+export interface ConferenceDetails {
+  venue: string;
+  organizers: string;
+  summary: string;
+  coreQuestion: string;
+  publicationNote: string;
+  keyTopics: string[];
+  importantDates: { label: string; date: string }[];
+  fees: { label: string; amount: string }[];
+  subThemes: { title: string; topics: string[] }[];
+  audience: string[];
+  submissionGuidelines: string[];
+  committee: { role: string; members: string[] }[];
+  contacts: { label: string; value: string; href: string }[];
+  travelNote: string;
+}
+
 export interface Event {
   id: string;
   title: string;
+  shortTitle?: string;
   theme: string;
   date: string;
   endDate?: string;
+  dateLabel?: string;
   location: string;
   format: "in-person" | "online" | "hybrid";
   status: "upcoming" | "completed";
   registrationUrl?: string;
+  registrationLabel?: string;
   brochureUrl?: string;
   image?: string;
   galleryLink?: string;
+  details?: ConferenceDetails;
 }
 
 export interface MembershipTier {

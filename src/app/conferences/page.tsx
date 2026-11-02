@@ -56,8 +56,10 @@ export default function ConferencesPage() {
                     <div className="mt-4 flex flex-wrap gap-4">
                       <div className="flex items-center gap-2 text-sm text-ink-light">
                         <Calendar className="w-4 h-4 text-brand-gold-dark" />
-                        {event.date}
-                        {event.endDate && ` - ${event.endDate}`}
+                        {event.dateLabel ??
+                          (event.endDate
+                            ? `${event.date} - ${event.endDate}`
+                            : event.date)}
                       </div>
                       <div className="flex items-center gap-2 text-sm text-ink-light">
                         <MapPin className="w-4 h-4 text-brand-gold-dark" />
@@ -68,7 +70,8 @@ export default function ConferencesPage() {
                     <div className="mt-6 flex flex-wrap gap-3">
                       {event.registrationUrl && (
                         <Button href={event.registrationUrl} variant="primary" size="sm">
-                          Register <ArrowRight className="w-4 h-4" />
+                          {event.registrationLabel ?? "Register"}{" "}
+                          <ArrowRight className="w-4 h-4" />
                         </Button>
                       )}
                       {event.galleryLink && (

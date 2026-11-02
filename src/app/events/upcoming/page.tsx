@@ -1,33 +1,16 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/page-hero";
 import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Users, ArrowRight } from "lucide-react";
+import { ConferenceInfo } from "@/components/events/conference-info";
+import { Calendar, MapPin, ArrowRight } from "lucide-react";
 import { upcomingEvents } from "@/data/events";
 
 export const metadata: Metadata = {
   title: "Upcoming Events",
   description: "Upcoming events and conferences organized by SASS.",
 };
-
-const topics = [
-  "Social Change and Development",
-  "Education, Policy, and Governance",
-  "Gender, Equity, and Social Justice",
-  "Globalization and Cultural Dynamics",
-  "Technology, Society, and Ethics",
-  "Sustainability and Inclusive Development",
-  "Migration, Identity, and Human Rights",
-];
-
-const participants = [
-  "Faculty and academicians",
-  "Research scholars and students",
-  "Policy-makers and administrators",
-  "NGO and international organization representatives",
-];
 
 export default function UpcomingEventsPage() {
   const event = upcomingEvents[0];
@@ -58,7 +41,7 @@ export default function UpcomingEventsPage() {
               <div className="mt-8 flex flex-wrap gap-6">
                 <div className="flex items-center gap-2 text-ink-light">
                   <Calendar className="w-5 h-5 text-brand-gold-dark" />
-                  March 8-13, 2026
+                  {event.dateLabel ?? event.date}
                 </div>
                 <div className="flex items-center gap-2 text-ink-light">
                   <MapPin className="w-5 h-5 text-brand-gold-dark" />
@@ -66,34 +49,7 @@ export default function UpcomingEventsPage() {
                 </div>
               </div>
 
-              {/* Key Topics */}
-              <div className="mt-12">
-                <h3 className="text-xl font-black text-ink font-heading mb-6">
-                  Key Topics
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {topics.map((topic) => (
-                    <Card key={topic} className="p-4">
-                      <p className="text-sm font-medium text-ink">{topic}</p>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* Target Participants */}
-              <div className="mt-12">
-                <h3 className="text-xl font-black text-ink font-heading mb-6">
-                  Who Should Attend
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {participants.map((p) => (
-                    <div key={p} className="flex items-center gap-3">
-                      <Users className="w-4 h-4 text-brand-teal" />
-                      <span className="text-sm text-ink-light">{p}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {event.details && <ConferenceInfo details={event.details} />}
 
               {/* CTA */}
               <div className="mt-12 flex flex-wrap gap-4">
@@ -102,7 +58,7 @@ export default function UpcomingEventsPage() {
                   variant="primary"
                   size="lg"
                 >
-                  Register for Conference
+                  {event.registrationLabel ?? "Register for Conference"}
                   <ArrowRight className="w-5 h-5" />
                 </Button>
                 <Button href="/conferences" variant="outline" size="lg">
