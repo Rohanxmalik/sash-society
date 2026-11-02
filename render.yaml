@@ -1,0 +1,36 @@
+# Render Blueprint. docs/GO-LIVE.md covers the first deploy.
+services:
+  - type: web
+    name: sass-website
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    autoDeployTrigger: commit
+    # The Free plan has no pre-deploy step, so migrations run after a good build.
+    buildCommand: npm ci --include=dev && npm run build && npm run db:deploy
+    startCommand: npm start
+    # Not /api/health. Render polls this every few seconds, and a database query
+    # that often would use up Neon's free compute.
+    healthCheckPath: /api/ping
+    envVars:
+      - key: BETTER_AUTH_URL
+        value: https://sass-socio.org
+      - key: EMAIL_FROM
+        value: SASS <no-reply@sass-socio.org>
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: RAZORPAY_WEBHOOK_SECRET
+        generateValue: true
+      - key: CRON_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false

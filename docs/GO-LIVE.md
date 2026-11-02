@@ -6,20 +6,19 @@ Tick the steps as you go. Keep the secrets in a password manager, never in a fil
 
 ## Before you start
 
-You need these accounts: GitHub (repo `Rohanxmalik/sash-society`), Railway, Neon, Resend, the domain registrar, and the client's Razorpay.
+You need these accounts: GitHub (repo `Rohanxmalik/sash-society`), Render, Neon, Resend, cron-job.org, GoDaddy (the domain), and the client's Razorpay.
 
 **Razorpay is the one step that can block launch.** Live keys only exist once the client's account has passed KYC. If that has not happened, do everything below with test keys so the site is ready, but do not announce it. In test mode real cards are refused, so nobody can pay. Swap in live keys in step 5 the moment activation comes through.
 
-## 1. Buy the domain
+## 1. The domain
 
-- [ ] Search for `sass-socio.org` at the registrar. On 2 Nov 2026 it was unregistered, even though the brochure and QR code point to it. Confirm with the client that they do not hold it under another name.
-- [ ] Buy it with an email the client controls.
-- [ ] Do not change the nameservers unless you want to. If you use Cloudflare DNS, every record must be **DNS only (grey cloud)**, because a proxy breaks the visitor IP that rate limits rely on.
+`sass-socio.org` was bought on GoDaddy on 2 Nov 2026.
 
-## 2. Put the code on GitHub
+- [ ] Keep DNS at GoDaddy. Do not add your own proxy in front of the site, such as a Cloudflare orange cloud. Render already has its own edge, and a second proxy changes the visitor IP that rate limits rely on.
 
-- [ ] `git push -u origin feat/membership-portal`
-- [ ] Open a pull request into `main` and merge it. Scheduled GitHub Actions only run from `main`.
+## 2. The code
+
+Render and the scheduled GitHub Actions both use `main`, so anything going live must be merged there.
 
 ## 3. Create the database on Neon
 
@@ -35,73 +34,77 @@ You need these accounts: GitHub (repo `Rohanxmalik/sash-society`), Railway, Neon
 
 The contact form sends to `southasiansociety2@gmail.com`, with Reply-To set to the visitor.
 
-## 5. Set up Razorpay
+## 5. Get the Razorpay keys
 
 In the client's Razorpay Dashboard:
 
 - [ ] **Account & Settings → API Keys**: generate keys. These are `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`. The secret is shown once.
-- [ ] **Account & Settings → Webhooks → Add**:
-  - URL: `https://sass-socio.org/api/webhooks/razorpay`
-  - Secret: generate one (step 6). This is `RAZORPAY_WEBHOOK_SECRET`.
-  - Events: `payment.authorized`, `payment.captured`, `order.paid`, `refund.processed`
 - [ ] **Account & Settings → Payment capture**: set to automatic.
 - [ ] **International payments**: ask Razorpay to enable them. The $116 and $300 plans fail with "We could not start the payment" until this is on. Everything in rupees works without it.
 
-Webhooks are set separately for test and live mode, so repeat this when moving to live keys.
+## 6. Generate the backup passphrase
 
-## 6. Generate the secrets
-
-Run this four times and label each result:
+Render generates the other secrets in the next step. Run this once and keep the result as `BACKUP_PASSPHRASE`:
 
 ```bash
 openssl rand -base64 32
 ```
 
-`BETTER_AUTH_SECRET`, `CRON_SECRET`, `RAZORPAY_WEBHOOK_SECRET`, `BACKUP_PASSPHRASE`
+## 7. Deploy on Render
 
-## 7. Deploy on Railway
-
-- [ ] Choose the **Hobby** plan. The Free plan has no custom domains.
-- [ ] New Project → Deploy from GitHub repo → `sash-society`, branch `main`.
-- [ ] Service **Settings**:
-  - Region: Southeast Asia (Singapore)
-  - Start Command: `npm start`
-  - Pre-Deploy Command: `npm run db:deploy`
-  - Healthcheck Path: `/api/health`
-- [ ] Service **Variables**: add these. Leave `NODE_ENV` unset, Railway handles it.
+- [ ] Use a workspace with no other Free web service that stays awake. Free services share 750 hours a month, and this site uses up to 744. If the hours run out, every Free service stops until the next month.
+- [ ] **New → Blueprint**, connect GitHub, pick `sash-society`, branch `main`. Render reads `render.yaml`, which sets the Free plan, Singapore, the commands and the health check path. The region cannot be changed later.
+- [ ] Fill in the values Render asks for:
 
 | Variable | Value |
 |---|---|
 | `DATABASE_URL` | From step 3 |
-| `BETTER_AUTH_SECRET` | From step 6 |
-| `BETTER_AUTH_URL` | `https://sass-socio.org` with no trailing slash |
 | `ADMIN_EMAILS` | From the client, comma separated |
 | `RESEND_API_KEY` | From step 4 |
-| `EMAIL_FROM` | `SASS <no-reply@sass-socio.org>` |
 | `RAZORPAY_KEY_ID` | From step 5 |
 | `RAZORPAY_KEY_SECRET` | From step 5 |
-| `RAZORPAY_WEBHOOK_SECRET` | From step 6 |
-| `CRON_SECRET` | From step 6 |
 
-- [ ] Wait for the deploy to go green. If it fails, read the Deploy Logs. A missing variable is named there.
+`render.yaml` fixes `BETTER_AUTH_URL` and `EMAIL_FROM`, and Render generates `BETTER_AUTH_SECRET`, `CRON_SECRET` and `RAZORPAY_WEBHOOK_SECRET`. Copy the last two from the **Environment** tab when later steps need them.
 
-Railway's Config as Code file cannot be used on new services, so these settings live in the dashboard and not in the repo.
+- [ ] Wait for the deploy to go live. If it fails, read the logs. A missing variable is named there. Migrations run at the end of the build, so a wrong `DATABASE_URL` fails the build and nothing goes live.
 
-## 8. Point the domain at Railway
+## 8. Point the domain at Render
 
-- [ ] Service **Settings → Networking → Custom Domain**: add `sass-socio.org` and `www.sass-socio.org`.
-- [ ] Add the records Railway shows at the registrar. The bare domain needs a provider that supports CNAME flattening or ALIAS records, such as Cloudflare DNS. If your registrar does not, move DNS to Cloudflare, grey cloud.
-- [ ] Wait for the green tick and the https certificate.
+- [ ] Service **Settings → Custom Domains → Add**: enter `sass-socio.org`. Render adds `www` and redirects it to the bare domain.
+- [ ] In GoDaddy's DNS page, delete the parking `A` records (`15.197.148.33`, `3.33.130.190`), the existing `www` `CNAME`, any `AAAA` records and any domain forwarding. Leave the Resend records alone.
+- [ ] Add the `A` record for `@` and the `CNAME` for `www` that Render shows.
+- [ ] Press **Verify** in Render and wait for the https certificate.
 - [ ] Open `https://www.sass-socio.org`. It must redirect to `https://sass-socio.org`.
 
-## 9. Turn on the scheduled jobs
+Log in only after this step. Sign-in is tied to `BETTER_AUTH_URL`, so it does not work on the `onrender.com` address.
+
+## 9. Add the Razorpay webhook
+
+- [ ] **Account & Settings → Webhooks → Add**:
+  - URL: `https://sass-socio.org/api/webhooks/razorpay`
+  - Secret: `RAZORPAY_WEBHOOK_SECRET` from Render
+  - Events: `payment.authorized`, `payment.captured`, `order.paid`, `refund.processed`
+
+Webhooks are set separately for test and live mode, so repeat this when moving to live keys.
+
+## 10. Keep the site awake
+
+Render's Free plan sleeps after 15 minutes without a request, and the next visitor then waits about a minute.
+
+- [ ] Create a free account on [cron-job.org](https://cron-job.org).
+- [ ] **Create cronjob**: URL `https://sass-socio.org/api/ping`, every 10 minutes, with failure notifications on.
+- [ ] Check its history shows `200` after 20 minutes.
+
+Never point this at `/api/health`. That runs a database query, which would keep Neon awake and use up its free compute.
+
+## 11. Turn on the scheduled jobs
 
 Repository **Settings → Secrets and variables → Actions**, add:
 
 | Secret | Value |
 |---|---|
 | `SITE_URL` | `https://sass-socio.org` |
-| `CRON_SECRET` | Same as on Railway |
+| `CRON_SECRET` | Same as on Render |
 | `BACKUP_DATABASE_URL` | Same as `DATABASE_URL` |
 | `BACKUP_PASSPHRASE` | From step 6 |
 
@@ -109,9 +112,9 @@ Repository **Settings → Secrets and variables → Actions**, add:
 
 Keep `BACKUP_PASSPHRASE` somewhere safe. The backups cannot be opened without it.
 
-## 10. Add the client's content
+## 12. Add the client's content
 
-All of it goes in one commit, then merge to `main` and Railway redeploys.
+All of it goes in one commit, then merge to `main` and Render redeploys.
 
 - [ ] `src/shared/client-config.ts`: signatories, certificate wording, GST number, membership term, `firstMemberNumber`, email text.
 - [ ] `public/certificate/`: `signature-1.png`, `signature-2.png` (transparent PNG), `seal.png`.
@@ -119,21 +122,18 @@ All of it goes in one commit, then merge to `main` and Railway redeploys.
 - [ ] `src/frontend/content/legal.ts`: approved policy text.
 - [ ] `public/images/conferences/`: gallery photos.
 
-## 11. Create the admin accounts
+## 13. Create the admin accounts
 
 - [ ] Each admin signs up on the site with the exact email in `ADMIN_EMAILS`.
 - [ ] They open `/admin`. If it sends them to the home page, the email does not match the variable.
 - [ ] **Import**: upload the existing members CSV, starting from the template on that page. Fix any rows it lists and upload those again.
 
-## 12. Check everything
+## 14. Check everything
 
-- [ ] Run the setup check. All lines must say PASS:
+- [ ] Run the setup check. Paste the values from Render's **Environment** tab into a file named `.env.render`, then run this. All lines must say PASS. Delete the file afterwards.
 
 ```bash
-npm i -g @railway/cli
-railway login
-railway link
-railway run npm run setup:check
+node --env-file=.env.render scripts/check-setup.mjs
 ```
 
 - [ ] Sign up with a real email of yours. The code must arrive within a minute, in the inbox and not spam.
@@ -144,7 +144,7 @@ railway run npm run setup:check
 - [ ] **Check the rate limit uses the real IP.** Enter a wrong password 6 times from your phone on mobile data. The sixth must say "Too many attempts", and your laptop on another network must still be able to log in.
 - [ ] Visit `/admin` and `/api/admin/export/members` in a private window. Both must send you to login.
 
-## 13. Announce
+## 15. Announce
 
 - [ ] Replace the Google Form link wherever it was shared with `https://sass-socio.org/events/mauritius-2027/register`.
 - [ ] Have the brochure's QR code point there.
@@ -155,7 +155,9 @@ Offline registration closes automatically on 25 Nov 2026 at 23:59 India time, an
 
 | Problem | Do this |
 |---|---|
-| Bad deploy | Railway → Deployments → Redeploy the last good one |
+| Bad deploy | Render → Events → Rollback on the last good deploy |
+| Site takes a minute to open | It went to sleep. Check the job history on cron-job.org |
+| Every page is down and Render says suspended | The 750 Free hours ran out. Stop any other Free service in the workspace, or move to a paid plan |
 | No sign-up code arrives | Resend → Logs. Check the domain is verified and `EMAIL_FROM` uses it |
 | Money taken but no membership | Check the webhook in Razorpay. Then `/admin/payments` for a note. Razorpay retries failed webhooks for 24 hours |
 | Member says no certificate came | `/admin/members/<id>` → Resend Welcome Email |

@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, emailOTP } from "better-auth/plugins";
+import { CLIENT_IP_HEADER } from "@/backend/client-ip";
 import * as schema from "@/backend/db/schema";
 import type { Db } from "@/backend/db/types";
 import type { Email, SendEmail } from "@/backend/email/sender";
@@ -101,8 +102,8 @@ export function createAuth({
       },
     },
     advanced: {
-      // Set by Railway's edge. X-Forwarded-For chains are not trusted by default.
-      ipAddress: { ipAddressHeaders: ["x-real-ip"] },
+      // Without a client IP, every visitor would share one limit.
+      ipAddress: { ipAddressHeaders: [CLIENT_IP_HEADER] },
     },
     // throw hands unexpected errors to handleAuthRequest. Otherwise the router
     // writes them straight to console.error, query parameters included.

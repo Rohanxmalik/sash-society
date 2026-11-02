@@ -24,7 +24,7 @@ vi.mock("@/backend/auth/session", () => ({
 vi.mock("@/backend/runtime", () => ({ getPaymentDeps: mocks.getPaymentDeps }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 vi.mock("next/headers", () => ({
-  headers: async () => new Headers({ "x-real-ip": mocks.address.current }),
+  headers: async () => new Headers({ "cf-connecting-ip": mocks.address.current }),
 }));
 
 const REGISTRATION = {

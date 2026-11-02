@@ -38,5 +38,5 @@ Without Razorpay keys, the Pay button succeeds through a fake gateway. Without a
 | `npm run db:up` | Start local Postgres |
 | `npm run db:generate` | Create a migration after a schema change |
 | `npm run db:migrate` | Apply migrations locally |
-| `npm run db:deploy` | Apply migrations in production, run by Railway before each deploy |
+| `npm run db:deploy` | Apply migrations in production, run by Render at the end of each build |
 | `npm run setup:check` | Check the production setup. See GO-LIVE step 12 |

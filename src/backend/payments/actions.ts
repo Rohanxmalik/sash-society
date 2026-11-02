@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { getSession, requireSession } from "@/backend/auth/session";
+import { clientAddress } from "@/backend/client-ip";
 import { createRateLimiter } from "@/backend/rate-limit";
 import { getPaymentDeps } from "@/backend/runtime";
 import type { CheckoutResult, ConfirmResult } from "@/shared/checkout";
@@ -32,7 +33,7 @@ export async function startMembershipCheckoutAction(
 export async function startEventCheckoutAction(
   input: unknown
 ): Promise<CheckoutResult> {
-  const address = (await headers()).get("x-real-ip") ?? "unknown";
+  const address = clientAddress(await headers());
   if (!allowGuestCheckout(address)) return TOO_MANY_ATTEMPTS;
 
   const session = await getSession();

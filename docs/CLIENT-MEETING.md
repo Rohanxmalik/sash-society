@@ -29,7 +29,7 @@ Everything to get from SASS so the site can go live. Ask in this order: the firs
 
 ### 4. Who pays the running costs
 
-- [ ] Card for Railway, $5 a month.
+- [ ] Hosting is free on Render's Free plan. A paid plan stops the site ever sleeping, if they want that later.
 - [ ] Domain, about $10 to $15 a year.
 - [ ] Razorpay takes 2% plus GST on each payment, so ₹10,000 reaches them as about ₹9,764.
 
@@ -77,6 +77,8 @@ The drafts say:
 
 - [ ] Do they agree? Do they want a refund window, such as a part refund up to 30 days before the conference?
 - [ ] Are they happy with Aurangabad courts in the Terms?
+- [ ] Can they commit to replying to refund requests within 7 working days?
+- [ ] Is 18 and over the right minimum age for accounts? Some students may be younger.
 
 Have someone at SASS read the four policy pages. They were drafted by us and have not had legal review.
 
@@ -92,6 +94,8 @@ Have someone at SASS read the four policy pages. They were drafted by us and hav
 - [ ] What the welcome email should say about what to expect. Draft text is in `src/shared/client-config.ts`.
 - [ ] Spreadsheet of **existing members**: name, email, phone, designation, institution, plan, member number, date joined, expiry date.
 - [ ] List of anyone **already registered for Mauritius** through the Google Form or by bank transfer. They are not in the new system. Decide whether to add them by hand or keep that list alongside.
+- [ ] **Journal:** existing issues of Explorations as PDFs, with title, authors and date. They are added at `/admin` → Journal.
+- [ ] **Journal access:** reading now needs a login, so the page no longer says "open-access". If Explorations is officially registered as open access, tell us and we will change this.
 - [ ] Conference photos for the gallery. The old photo links point to the unregistered domain, so the gallery shows "coming soon" until we have them.
 
 ## Things to tell them

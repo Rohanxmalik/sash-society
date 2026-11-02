@@ -23,7 +23,8 @@ The site expects 30 to 50 sign-ups a month, so everything is chosen to be cheap 
 | Payments | Razorpay Orders API and Checkout | Plain `fetch`, no SDK |
 | Email | Resend | 3,000 a month and 100 a day on the free plan |
 | PDFs | pdf-lib | Made on demand, nothing stored on disk |
-| Hosting | Railway Hobby | Runs `next start` as one long-lived Node process |
+| Hosting | Render Free | Runs `next start` as one long-lived Node process, set up by `render.yaml` |
+| Keep-awake ping | cron-job.org | Calls `/api/ping` every 10 minutes |
 | Scheduled jobs | GitHub Actions | Daily job and nightly backup |
 
 ## Folder map
@@ -72,6 +73,8 @@ Schema is in `src/backend/db/schema/`.
 | `event_registrations` | One row per attempt. A partial unique index allows one confirmed registration per email per event. |
 | `payments` | One row per Razorpay order, for either a membership or a registration |
 | `counters` | Sequential numbers for members, receipts and registrations |
+| `journal_papers` | Journal work: title, authors, abstract, status, who decided |
+| `journal_files` | The uploaded files, kept apart so lists never load them |
 
 Membership status moves like this:
 
@@ -83,9 +86,9 @@ paid ──────────────► pending_approval ──approv
   └────────────────────────────────────────────► active ──remove──► removed
 ```
 
-Profile photos are kept in the database as small data URLs, at most 400 KB. The browser crops and shrinks them first. The disk on Railway is wiped on each deploy, so nothing may be stored there.
+Profile photos are kept in the database as small data URLs, at most 400 KB. The browser crops and shrinks them first. The disk on Render is wiped on each deploy and restart, so nothing may be stored there.
 
-Migrations: change the schema, run `npm run db:generate`, commit the file in `drizzle/`. Railway applies it through `npm run db:deploy` before each deployment.
+Migrations: change the schema, run `npm run db:generate`, commit the file in `drizzle/`. Render applies it through `npm run db:deploy` at the end of each build, because its Free plan has no pre-deploy step.
 
 ## How the main flows work
 
@@ -123,6 +126,18 @@ Life Abroad and Ordinary plans go to `pending_approval` after payment, with a re
 
 `/events/<id>/register` works for guests and prefills for logged-in members. The options and closing dates come from `src/shared/events.ts`, and the server re-checks the closing date. Fulfilment is the same as above, and the confirmation email carries a registration number such as `SASS/MU27/0001` and a receipt.
 
+### Journal
+
+Published work is listed at `/journal` (the latest three) and `/journal/archive` (everything). The lists are public, but opening a file needs a login: `src/proxy.ts` sends a signed-out reader to login, and they return to the file afterwards. Any logged-in account can read published work. Work that is not published can only be opened by its author or an admin.
+
+Active members submit at `/journal/submit`. Files must be PDF or Word `.docx` and at most 10 MB, and `src/backend/journal/files.ts` checks the opening bytes as well as the extension. The older `.doc` format is refused because it can carry macros. Each member can have 5 works under review, and 5 submissions an hour. The society is emailed about each new submission.
+
+Uploads go to the route handlers under `/api/uploads`, not server actions. Server actions keep the 1 MB limit, and `src/backend/journal/upload.ts` checks the session, membership and declared size before it reads the file. Opening files is limited to 30 reads a minute per account. `src/backend/journal/file-gate.ts` also holds at most 3 files in memory across the whole server, and answers 503 beyond that, because the Free server has 512 MB.
+
+In `/admin/journal` an admin approves, rejects with an optional reason, or removes published work. The author is emailed the outcome. Rejecting deletes the file. Existing back issues are added on the same page and skip review.
+
+Files are stored in Postgres, because Render's disk is wiped on every deploy. This also means the nightly backup covers them. Neon Free holds 0.5 GB, which is a couple of hundred papers, so move the files to object storage if the database nears that limit.
+
 ### Razorpay webhook
 
 `POST /api/webhooks/razorpay` covers the case where a browser closes between paying and confirming. It verifies `X-Razorpay-Signature` over the raw body, then handles:
@@ -143,6 +158,14 @@ Signature images are read from `public/certificate/signature-1.png`, `signature-
 ### Daily job
 
 A GitHub Action calls `POST /api/cron/daily` with `Authorization: Bearer $CRON_SECRET` at 06:00 India time. It marks lapsed memberships expired, sends renewal reminders 30 days before expiry, and retries unsent payment emails. A membership past its end date already shows as expired before this runs.
+
+### Keeping the site awake
+
+Render's Free plan sleeps after 15 minutes without a request, and the next visitor then waits about a minute. cron-job.org calls `/api/ping` every 10 minutes to prevent this. A 31-day month awake uses 744 of the workspace's 750 free hours, so this must be the only Free web service that stays awake there.
+
+`/api/ping` never touches the database, and Render's health check uses the same path. Neon has to reach its 5 idle minutes and suspend to stay within its free compute, so `/api/health`, which runs a query, must not be polled.
+
+Render's docs say the Free plan is not for production, and it may restart at any time. A restart clears the in-memory rate limits.
 
 ### Admin panel
 
@@ -165,9 +188,10 @@ CSV exports have a BOM so Excel reads Indian names correctly, and formula-like c
 | Add an event | Add it to `upcomingEvents` with a `registration` block. The form and admin page appear by themselves. |
 | Certificate wording and signatories, email text, GST number, membership term, first member number | `src/shared/client-config.ts` |
 | Certificate images | `public/certificate/` |
+| Journal article types | `src/shared/validation/journal.ts` |
 | Gallery photos | `public/images/conferences/1st-conference/` and `2nd-conference/`, then redeploy |
 | Policies | `src/frontend/content/legal.ts`, and update `LEGAL_UPDATED_ON` |
-| Who is an admin | `ADMIN_EMAILS` on Railway |
+| Who is an admin | `ADMIN_EMAILS` on Render |
 
 Past receipts keep their amount because the price is copied to the `payments` row at the time of payment.
 
@@ -216,15 +240,16 @@ Without Razorpay keys, the Pay button succeeds at once through the fake gateway.
 - Prices come from the server, and payment signatures are checked against our stored order id, never one sent by the browser.
 - `src/backend/safe-log.ts` removes query strings and private fields from logs.
 - Rate limits: Better Auth keeps login and code limits in the database. Guest checkout and the contact form use in-memory limits, which reset on restart.
-- Client IPs come from `X-Real-IP`, set by Railway's edge. This depends on traffic reaching Railway directly, so a DNS proxy such as Cloudflare's orange cloud must stay off.
+- Client IPs come from `CF-Connecting-IP`, set by the Cloudflare edge in front of Render (`src/backend/client-ip.ts`). Render does not document this header, so repeat the rate limit check in GO-LIVE.md if login limits ever stop working. A second proxy in front of the site must stay off.
 - The headers are in `next.config.ts`. Not done yet: CAPTCHA, a full script CSP, and HSTS `includeSubDomains`.
 
 ## Running costs
 
 | Item | Cost |
 |---|---|
-| Railway Hobby | $5 a month, including $5 of usage |
-| Neon Free | Free: 1 GB, suspends after 5 idle minutes, first request after that takes about a second |
+| Render Free | Free: 0.1 CPU, 512 MB, 750 hours a month |
+| cron-job.org | Free |
+| Neon Free | Free: 0.5 GB and 100 compute hours a month, suspends after 5 idle minutes, first request after that takes about a second |
 | Resend Free | Free up to 3,000 emails a month and 100 a day |
 | GitHub Actions | Free within the plan's minutes |
 | Domain | About $10 to $15 a year |

@@ -1,4 +1,5 @@
-// Railway runs this before each deployment (npm run db:deploy). It uses only
+// Render runs this at the end of each build (npm run db:deploy), because its Free
+// plan has no pre-deploy step. It uses only
 // production dependencies, so drizzle-kit is not needed on the server.
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";

@@ -36,7 +36,7 @@ function request(path: string, init: RequestInit & { ip?: string } = {}) {
       headers: {
         "content-type": "application/json",
         origin: BASE_URL,
-        "x-real-ip": init.ip ?? "203.0.113.1",
+        "cf-connecting-ip": init.ip ?? "203.0.113.1",
         ...init.headers,
       },
     })

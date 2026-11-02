@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { clientAddress } from "@/backend/client-ip";
 import { createRateLimiter } from "@/backend/rate-limit";
 import { getMailer } from "@/backend/runtime";
 import { sendContactMessage, type ContactResult } from "./send-message";
@@ -11,7 +12,7 @@ const allowMessage = createRateLimiter({ limit: 5, windowMs: ONE_HOUR_MS });
 export async function sendContactMessageAction(
   input: unknown
 ): Promise<ContactResult> {
-  const address = (await headers()).get("x-real-ip") ?? "unknown";
+  const address = clientAddress(await headers());
   if (!allowMessage(address)) {
     return {
       ok: false,

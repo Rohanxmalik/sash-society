@@ -1,8 +1,8 @@
 // Checks the production setup in one go: npm run setup:check
 //
-// Reads values from the environment, so run it through Railway to use the live
-// variables: railway run npm run setup:check
-// Nothing is changed and no secret is printed.
+// Reads values from the environment, so paste the live variables from Render into
+// .env.render and run: node --env-file=.env.render scripts/check-setup.mjs
+// Delete that file afterwards. Nothing is changed and no secret is printed.
 import pg from "pg";
 
 const REQUIRED = [

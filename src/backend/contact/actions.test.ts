@@ -10,7 +10,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/backend/runtime", () => ({ getMailer: () => mocks.sendEmail }));
 vi.mock("next/headers", () => ({
-  headers: async () => new Headers({ "x-real-ip": mocks.address.current }),
+  headers: async () => new Headers({ "cf-connecting-ip": mocks.address.current }),
 }));
 
 const VALID = {
