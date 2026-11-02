@@ -22,7 +22,7 @@ Render and the scheduled GitHub Actions both use `main`, so anything going live 
 
 ## 3. Create the database on Neon
 
-- [ ] New project, name `sass`, Postgres 17, region **AWS Asia Pacific (Singapore)**.
+- [ ] New project, name `sass`, Postgres 18, region **AWS Asia Pacific (Singapore)**. A later major version also needs the client version raised in `.github/workflows/nightly-backup.yml`.
 - [ ] Copy the connection string with **Connection pooling turned off**. This is `DATABASE_URL`. The app keeps its own small pool, and migrations and backups need a direct connection.
 
 ## 4. Set up email on Resend

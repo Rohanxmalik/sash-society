@@ -18,7 +18,7 @@ The site expects 30 to 50 sign-ups a month, so everything is chosen to be cheap 
 |---|---|---|
 | Framework | Next.js 16 (App Router) | Pages, server actions and API routes in one app |
 | UI | React 19, Tailwind 4, Framer Motion | Forms use react-hook-form with Zod |
-| Database | Postgres 17 with Drizzle ORM | Neon Free in production, Docker locally, PGlite in tests |
+| Database | Postgres with Drizzle ORM | Neon Free (version 18) in production, Docker locally, PGlite in tests |
 | Auth | Better Auth | Password plus emailed codes, no social logins |
 | Payments | Razorpay Orders API and Checkout | Plain `fetch`, no SDK |
 | Email | Resend | 3,000 a month and 100 a day on the free plan |

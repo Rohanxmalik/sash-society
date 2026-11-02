@@ -16,10 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Install the Postgres 17 client
+      # Must not be older than the Neon server, or pg_dump refuses to run.
+      - name: Install the Postgres 18 client
         run: |
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
-          sudo apt-get install -y postgresql-client-17
+          sudo apt-get install -y postgresql-client-18
 
       - name: Dump and encrypt
         env:
@@ -27,7 +28,7 @@ jobs:
           BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
           set -euo pipefail
-          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URL" --format=custom --no-owner \
+          /usr/lib/postgresql/18/bin/pg_dump "$DATABASE_URL" --format=custom --no-owner \
             | gpg --batch --yes --pinentry-mode loopback --symmetric --cipher-algo AES256 \
                 --passphrase "$BACKUP_PASSPHRASE" --output sass-backup.dump.gpg
 
