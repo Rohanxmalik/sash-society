@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { CommitteePage } from "@/components/committees/committee-page";
-import { advisoryCommittee } from "@/data/committees/advisory";
+import { CommitteePage } from "@/frontend/components/committees/committee-page";
+import { advisoryCommittee } from "@/frontend/content/committees/advisory";
 
 export const metadata: Metadata = {
   title: "Advisory Committee",

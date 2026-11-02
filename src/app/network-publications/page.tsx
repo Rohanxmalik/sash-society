@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Card } from "@/components/ui/card";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { SectionHeading } from "@/frontend/components/ui/section-heading";
+import { Card } from "@/frontend/components/ui/card";
 import { ExternalLink } from "lucide-react";
-import { networks } from "@/data/networks";
+import { networks } from "@/frontend/content/networks";
 
 export const metadata: Metadata = {
   title: "Network & Publications",

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Card } from "@/components/ui/card";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { SectionHeading } from "@/frontend/components/ui/section-heading";
+import { Card } from "@/frontend/components/ui/card";
 import { BookOpen, Users, Globe, GraduationCap, Newspaper, Mic } from "lucide-react";
 
 export const metadata: Metadata = {

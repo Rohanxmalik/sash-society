@@ -1,4 +1,4 @@
-# Local development database only. Production uses Railway Postgres.
+# Local development database only. Production uses Neon.
 services:
   postgres:
     image: postgres:17-alpine

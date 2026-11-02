@@ -4,7 +4,9 @@ const BASE_URL = "http://localhost:3000";
 
 export default defineConfig({
   testDir: "./e2e",
-  timeout: 60_000,
+  timeout: 150_000,
+  // The dev server compiles each page on first visit.
+  expect: { timeout: 15_000 },
   fullyParallel: false,
   workers: 1,
   reporter: "list",

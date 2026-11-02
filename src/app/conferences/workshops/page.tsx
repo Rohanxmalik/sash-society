@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
 import { BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ConferenceInfo } from "@/components/events/conference-info";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { Badge } from "@/frontend/components/ui/badge";
+import { Button } from "@/frontend/components/ui/button";
+import { ConferenceInfo } from "@/frontend/components/events/conference-info";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
-import { upcomingEvents } from "@/data/events";
+import { upcomingEvents } from "@/shared/events";
 
 export const metadata: Metadata = {
   title: "Upcoming Events",

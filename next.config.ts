@@ -18,16 +18,24 @@ const securityHeaders = [
   },
 ];
 
+// Sessions and email links use the address in BETTER_AUTH_URL, so www must not
+// serve the site separately.
+const siteHost = new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000")
+  .hostname;
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "sass-socio.org",
-        pathname: "/wp-content/uploads/**",
-      },
-    ],
+  async redirects() {
+    return siteHost === "localhost"
+      ? []
+      : [
+          {
+            source: "/:path*",
+            has: [{ type: "host" as const, value: `www.${siteHost}` }],
+            destination: `https://${siteHost}/:path*`,
+            permanent: true,
+          },
+        ];
   },
   async headers() {
     return [

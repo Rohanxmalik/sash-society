@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { AuthShell } from "@/components/auth/auth-shell";
-import { EmailRequestForm } from "@/components/auth/email-request-form";
+import { AuthShell } from "@/frontend/components/auth/auth-shell";
+import { ForgotPasswordForm } from "@/frontend/components/auth/forgot-password-form";
 
 export const metadata: Metadata = {
   title: "Forgot Password",
@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
       title="Forgot Password"
       subtitle="We will email you a link to choose a new password."
     >
-      <EmailRequestForm request="passwordReset" />
+      <ForgotPasswordForm />
     </AuthShell>
   );
 }

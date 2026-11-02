@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { Card } from "@/frontend/components/ui/card";
+import { Badge } from "@/frontend/components/ui/badge";
+import { Button } from "@/frontend/components/ui/button";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
-import { upcomingEvents, previousEvents } from "@/data/events";
+import { upcomingEvents, previousEvents } from "@/shared/events";
 
 export const metadata: Metadata = {
   title: "SASS Conferences",

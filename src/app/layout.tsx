@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Radio_Canada, Radio_Canada_Big, Pathway_Gothic_One } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { Preloader } from "@/components/ui/preloader";
+import { Header } from "@/frontend/components/layout/header";
+import { Footer } from "@/frontend/components/layout/footer";
+import { Preloader } from "@/frontend/components/ui/preloader";
 
 const radioCanada = Radio_Canada({
   variable: "--font-body",

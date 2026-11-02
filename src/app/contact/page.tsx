@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { ContactForm } from "@/components/contact/contact-form";
-import { Card } from "@/components/ui/card";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { ContactForm } from "@/frontend/components/contact/contact-form";
+import { Card } from "@/frontend/components/ui/card";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
-import { siteConfig } from "@/data/site-config";
+import { siteConfig } from "@/shared/site-config";
 
 export const metadata: Metadata = {
   title: "Contact Us",

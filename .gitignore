@@ -36,6 +36,7 @@ yarn-error.log*
 
 # local email outbox
 .dev-mail.jsonl
+.dev-mail/
 
 # playwright
 /test-results/

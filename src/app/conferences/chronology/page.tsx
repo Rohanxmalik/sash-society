@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { conferenceChronology } from "@/data/conferences";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { conferenceChronology } from "@/frontend/content/conferences";
 
 export const metadata: Metadata = {
   title: "Chronology of SASS",
@@ -24,7 +24,7 @@ export default function ChronologyPage() {
               {/* Vertical line */}
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-brand-gold/30" />
 
-              {conferenceChronology.map((conf, i) => (
+              {conferenceChronology.map((conf) => (
                 <div key={conf.number} className="relative flex gap-8 pb-12 last:pb-0">
                   {/* Circle */}
                   <div className="relative z-10 flex items-center justify-center w-16 h-16 rounded-full bg-brand-dark-teal text-white font-black font-heading text-xl shrink-0 border-4 border-cream">

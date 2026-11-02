@@ -1,14 +1,35 @@
+import path from "node:path";
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { GalleryGrid } from "@/components/gallery/gallery-grid";
+import { loadGallery } from "@/backend/gallery";
+import { GalleryGrid } from "@/frontend/components/gallery/gallery-grid";
+import { Container } from "@/frontend/components/ui/container";
+import { PageHero } from "@/frontend/components/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "SASS Gallery",
   description: "Photo gallery from SASS conferences and events.",
 };
 
-export default function GalleryPage() {
+// Drop photos into these folders under public/ and rebuild.
+const GALLERY_SOURCES = [
+  {
+    id: "2nd",
+    label: "2nd Conference (Dubai 2025)",
+    folder: "images/conferences/2nd-conference",
+  },
+  {
+    id: "1st",
+    label: "1st Conference (2024)",
+    folder: "images/conferences/1st-conference",
+  },
+];
+
+export default async function GalleryPage() {
+  const conferences = await loadGallery(
+    GALLERY_SOURCES,
+    path.join(process.cwd(), "public")
+  );
+
   return (
     <>
       <PageHero
@@ -18,7 +39,13 @@ export default function GalleryPage() {
 
       <section className="py-24 lg:py-32">
         <Container>
-          <GalleryGrid />
+          {conferences.length > 0 ? (
+            <GalleryGrid conferences={conferences} />
+          ) : (
+            <p className="text-center text-ink-light">
+              Photos from our conferences are coming soon.
+            </p>
+          )}
         </Container>
       </section>
     </>

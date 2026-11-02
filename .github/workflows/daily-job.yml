@@ -1,0 +1,27 @@
+# Marks expired memberships, sends renewal reminders and retries failed emails.
+# Needs repository secrets SITE_URL and CRON_SECRET. Scheduled workflows only run
+# from the default branch.
+name: Daily job
+
+on:
+  schedule:
+    - cron: "30 0 * * *" # 06:00 India time
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call the daily job
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 120 \
+            --retry 2 --retry-all-errors --retry-delay 30 \
+            -X POST -H "Authorization: Bearer $CRON_SECRET" \
+            "$SITE_URL/api/cron/daily"

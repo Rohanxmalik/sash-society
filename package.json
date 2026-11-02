@@ -12,7 +12,9 @@
     "test:e2e": "playwright test",
     "db:up": "docker compose up -d --wait",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:deploy": "node scripts/migrate.mjs",
+    "setup:check": "node scripts/check-setup.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -22,6 +24,7 @@
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.7.0",
     "next": "^16.4.3",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.23.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -48,5 +51,8 @@
     "typescript": "^5",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

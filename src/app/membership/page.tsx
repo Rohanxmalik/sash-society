@@ -1,18 +1,35 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
-import { membershipTiers } from "@/data/membership-tiers";
+import { getSession } from "@/backend/auth/session";
+import { getDb } from "@/backend/db";
+import { findLiveMembership } from "@/backend/members/repository";
+import { displayStatus } from "@/backend/members/rules";
+import { PlanGrid } from "@/frontend/components/membership/plan-grid";
+import { Container } from "@/frontend/components/ui/container";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { SectionHeading } from "@/frontend/components/ui/section-heading";
+import { siteConfig } from "@/shared/site-config";
 
 export const metadata: Metadata = {
   title: "Become a Member",
-  description: "Join SASS - explore membership plans and become part of our academic community.",
+  description:
+    "Join SASS - explore membership plans and become part of our academic community.",
 };
 
-export default function MembershipPage() {
+async function currentPlanFor(userId: string) {
+  const live = await findLiveMembership(getDb(), userId);
+  if (!live || displayStatus(live, new Date()) === "expired") return null;
+  return live.planSlug;
+}
+
+export default async function MembershipPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ plan?: string | string[] }>;
+}) {
+  const { plan } = await searchParams;
+  const session = await getSession();
+  const currentPlanSlug = session ? await currentPlanFor(session.user.id) : null;
+
   return (
     <>
       <PageHero
@@ -29,79 +46,27 @@ export default function MembershipPage() {
             align="center"
           />
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {membershipTiers.map((tier) => (
-              <div
-                key={tier.name}
-                className={`bg-white border rounded-sm p-6 flex flex-col transition-shadow hover:shadow-lg ${
-                  tier.highlighted
-                    ? "border-brand-gold ring-2 ring-brand-gold/20"
-                    : "border-ink/10"
-                }`}
-              >
-                {tier.highlighted && (
-                  <Badge variant="gold" className="self-start mb-3">
-                    Most Popular
-                  </Badge>
-                )}
-                <h3 className="text-base font-bold text-ink font-heading">
-                  {tier.name}
-                </h3>
-                <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-sm text-ink-muted">
-                    {tier.currency === "INR" ? "\u20B9" : "$"}
-                  </span>
-                  <span className="text-3xl font-black text-ink font-heading">
-                    {tier.price}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-ink-muted">
-                  {tier.period === "one-time"
-                    ? "One-time payment"
-                    : tier.period === "annual"
-                    ? "Per year"
-                    : "4-year duration"}
-                </p>
-                <p className="mt-3 text-sm text-ink-light border-t border-ink/5 pt-3">
-                  {tier.eligibility}
-                </p>
-
-                <ul className="mt-4 space-y-2 flex-1">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex gap-2 text-sm text-ink-light">
-                      <Check className="w-4 h-4 text-brand-teal shrink-0 mt-0.5" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  href="mailto:southasiansociety2@gmail.com?subject=Membership Inquiry - ${tier.name}"
-                  variant={tier.highlighted ? "primary" : "outline"}
-                  size="sm"
-                  className="mt-6 w-full"
-                >
-                  Contact to Join
-                </Button>
-              </div>
-            ))}
-          </div>
+          <PlanGrid
+            signedIn={Boolean(session)}
+            currentPlanSlug={currentPlanSlug}
+            selectedSlug={typeof plan === "string" ? plan : null}
+          />
 
           <div className="mt-16 max-w-2xl mx-auto text-center">
             <p className="text-ink-light leading-relaxed">
               For membership inquiries, contact us at{" "}
               <a
-                href="mailto:southasiansociety2@gmail.com"
+                href={`mailto:${siteConfig.emails[0]}`}
                 className="text-brand-dark-teal font-medium hover:underline"
               >
-                southasiansociety2@gmail.com
+                {siteConfig.emails[0]}
               </a>{" "}
               or call{" "}
               <a
-                href="tel:+919415688058"
+                href={`tel:${siteConfig.phone.replaceAll(" ", "")}`}
                 className="text-brand-dark-teal font-medium hover:underline"
               >
-                +91 9415688058
+                {siteConfig.phone}
               </a>
             </p>
           </div>

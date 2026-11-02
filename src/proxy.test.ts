@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { describe, expect, test } from "vitest";
-import { proxy } from "./proxy";
+import { config, proxy } from "./proxy";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -11,22 +11,22 @@ const requestFor = (path: string, cookie?: string) =>
 
 describe("proxy", () => {
   test("sends a visitor without a session cookie to login", () => {
-    const res = proxy(requestFor("/account"));
+    const res = proxy(requestFor("/profile"));
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe(`${BASE_URL}/login?next=%2Faccount`);
+    expect(res.headers.get("location")).toBe(`${BASE_URL}/login?next=%2Fprofile`);
   });
 
   test("keeps the path and query in the return address", () => {
-    const res = proxy(requestFor("/account/settings?tab=1"));
+    const res = proxy(requestFor("/profile/settings?tab=1"));
 
     const location = new URL(res.headers.get("location") ?? "");
-    expect(location.searchParams.get("next")).toBe("/account/settings?tab=1");
+    expect(location.searchParams.get("next")).toBe("/profile/settings?tab=1");
   });
 
   test("lets a request with a session cookie through", () => {
     const res = proxy(
-      requestFor("/account", "better-auth.session_token=abc.def")
+      requestFor("/profile", "better-auth.session_token=abc.def")
     );
 
     expect(res.headers.get("location")).toBeNull();
@@ -35,9 +35,15 @@ describe("proxy", () => {
 
   test("recognises the secure cookie name used over HTTPS", () => {
     const res = proxy(
-      requestFor("/account", "__Secure-better-auth.session_token=abc.def")
+      requestFor("/profile", "__Secure-better-auth.session_token=abc.def")
     );
 
     expect(res.headers.get("x-middleware-next")).toBe("1");
+  });
+});
+
+describe("proxy matcher", () => {
+  test("covers the profile and admin areas", () => {
+    expect(config.matcher).toEqual(["/profile/:path*", "/admin/:path*"]);
   });
 });

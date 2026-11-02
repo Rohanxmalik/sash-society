@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { AuthShell } from "@/components/auth/auth-shell";
-import { ResetPasswordForm } from "@/components/auth/reset-password-form";
-import { Button } from "@/components/ui/button";
+import { AuthShell } from "@/frontend/components/auth/auth-shell";
+import { ResetPasswordForm } from "@/frontend/components/auth/reset-password-form";
+import { Button } from "@/frontend/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Reset Password",

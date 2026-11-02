@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Badge } from "@/components/ui/badge";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { Card } from "@/frontend/components/ui/card";
+import { SectionHeading } from "@/frontend/components/ui/section-heading";
+import { Badge } from "@/frontend/components/ui/badge";
 import { BookOpen, FileText, Shield, Clock } from "lucide-react";
 
 export const metadata: Metadata = {

@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { PageHero } from "@/components/ui/page-hero";
-import { Container } from "@/components/ui/container";
-import { Card } from "@/components/ui/card";
+import { PageHero } from "@/frontend/components/ui/page-hero";
+import { Container } from "@/frontend/components/ui/container";
+import { Card } from "@/frontend/components/ui/card";
 import { ExternalLink } from "lucide-react";
 import {
   scholarships,
   fellowships,
   internships,
   volunteerOpportunities,
-} from "@/data/student-resources";
-import type { ExternalResource } from "@/types";
+} from "@/frontend/content/student-resources";
+import type { ExternalResource } from "@/shared/types";
 
 const tabs = [
   { id: "scholarships", label: "Scholarships & Grants", data: scholarships },

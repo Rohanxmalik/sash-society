@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { AuthShell } from "@/components/auth/auth-shell";
-import { LoginForm } from "@/components/auth/login-form";
-import { safeRedirectPath } from "@/lib/safe-redirect";
+import { AuthShell } from "@/frontend/components/auth/auth-shell";
+import { LoginForm } from "@/frontend/components/auth/login-form";
+import { safeRedirectPath } from "@/shared/safe-redirect";
 
 export const metadata: Metadata = {
   title: "Log In",
