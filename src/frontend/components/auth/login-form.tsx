@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
@@ -16,7 +15,6 @@ import { loginSchema } from "@/shared/validation/auth";
 type LoginValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ next }: { next: string }) {
-  const router = useRouter();
   const [problem, setProblem] = useState<string | null>(null);
 
   const {
@@ -30,8 +28,9 @@ export function LoginForm({ next }: { next: string }) {
     setProblem(result);
     if (result) return;
 
-    router.replace(next);
-    router.refresh();
+    // A full page load, so the next page renders with the new session.
+    window.location.assign(next);
+    return new Promise<void>(() => {});
   };
 
   return (

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
@@ -68,7 +67,6 @@ function CodeStep({
   next: string;
   onBack: () => void;
 }) {
-  const router = useRouter();
   const [problem, setProblem] = useState<string | null>(null);
 
   const {
@@ -94,8 +92,10 @@ function CodeStep({
       return;
     }
 
-    router.replace(next);
-    router.refresh();
+    // A full page load, so the next page renders with the new session. Never
+    // resolves, so the button stays locked: the code cannot be used twice.
+    window.location.assign(next);
+    return new Promise<void>(() => {});
   };
 
   return (
