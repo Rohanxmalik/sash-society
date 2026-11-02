@@ -6,6 +6,7 @@ import { X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { navigation } from "@/data/navigation";
 import { Button } from "@/components/ui/button";
+import { AuthNavLink } from "@/components/auth/auth-nav-link";
 
 export function MobileNav({
   open,
@@ -138,6 +139,9 @@ export function MobileNav({
                 <Button href="/membership" variant="primary" className="w-full">
                   Become a Member
                 </Button>
+                <div onClick={onClose} className="mt-3">
+                  <AuthNavLink className="w-full" />
+                </div>
               </motion.div>
             </nav>
           </motion.div>

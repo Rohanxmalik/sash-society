@@ -7,6 +7,7 @@ import { Menu, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { AuthNavLink } from "@/components/auth/auth-nav-link";
 import { navigation } from "@/data/navigation";
 import { MobileNav } from "./mobile-nav";
 
@@ -126,11 +127,12 @@ export function Header() {
 
             {/* CTA + Mobile Toggle */}
             <div className="flex items-center gap-3">
+              <AuthNavLink iconOnly className="hidden md:inline-flex px-2" />
               <Button
                 href="/membership"
                 variant="primary"
                 size="sm"
-                className="hidden md:inline-flex"
+                className="hidden md:inline-flex whitespace-nowrap"
               >
                 Become a Member
               </Button>

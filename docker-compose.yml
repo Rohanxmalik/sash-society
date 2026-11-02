@@ -1,0 +1,20 @@
+# Local development database only. Production uses Railway Postgres.
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: sash
+      POSTGRES_PASSWORD: sash_dev
+      POSTGRES_DB: sash
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - sash_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sash -d sash"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  sash_pgdata:
