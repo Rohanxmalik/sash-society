@@ -11,7 +11,7 @@ export function PageHero({
   subtitle?: string;
 }) {
   return (
-    <section className="bg-brand-dark-teal relative overflow-hidden py-20 lg:py-28">
+    <section className="bg-brand-dark-teal relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-28">
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-1/2 -right-1/4 w-[600px] h-[600px] rounded-full border border-white/5" />

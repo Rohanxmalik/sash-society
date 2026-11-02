@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/frontend/components/ui/container";
@@ -15,6 +16,10 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const pathname = usePathname();
+  // Only the home page has a light top. Every other page opens on a dark hero,
+  // where the dark menu text needs a background behind it.
+  const solid = scrolled || pathname !== "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -26,10 +31,10 @@ export function Header() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-cream/90 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] py-2.5"
-            : "bg-transparent py-5"
-        }`}
+          solid
+            ? "bg-cream shadow-[0_1px_3px_rgba(0,0,0,0.05)]"
+            : "bg-transparent"
+        } ${scrolled ? "py-2.5" : "py-5"}`}
       >
         <Container>
           <div className="flex items-center justify-between">

@@ -43,7 +43,22 @@ describe("proxy", () => {
 });
 
 describe("proxy matcher", () => {
-  test("covers the profile and admin areas", () => {
-    expect(config.matcher).toEqual(["/profile/:path*", "/admin/:path*"]);
+  test("covers the private areas and journal files", () => {
+    expect(config.matcher).toEqual([
+      "/profile/:path*",
+      "/admin/:path*",
+      "/journal/submit",
+      "/api/journal/:path*",
+    ]);
+  });
+});
+
+describe("opening a journal file while signed out", () => {
+  test("comes back to the file after login", () => {
+    const res = proxy(requestFor("/api/journal/abc/file"));
+
+    const location = new URL(res.headers.get("location") ?? "");
+    expect(location.pathname).toBe("/login");
+    expect(location.searchParams.get("next")).toBe("/api/journal/abc/file");
   });
 });

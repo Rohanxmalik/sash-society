@@ -11,6 +11,7 @@ const ADMIN_LINKS = [
   { label: "Overview", href: "/admin" },
   { label: "Members", href: "/admin/members" },
   { label: "Events", href: "/admin/events" },
+  { label: "Journal", href: "/admin/journal" },
   { label: "Payments", href: "/admin/payments" },
   { label: "Import", href: "/admin/import" },
 ];
@@ -23,7 +24,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="py-10 lg:py-14">
+    <section className="pt-28 pb-10 lg:pt-32 lg:pb-14">
       <Container>
         <nav
           aria-label="Admin"

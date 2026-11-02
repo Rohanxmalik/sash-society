@@ -26,4 +26,22 @@ describe("createRateLimiter", () => {
 
     expect(allow("b", 0)).toBe(true);
   });
+
+  test("forgets expired keys once many have built up", () => {
+    const allow = createRateLimiter({ limit: 1, windowMs: 1000 });
+    Array.from({ length: 1000 }, (_, key) => allow(String(key), 0));
+
+    allow("new visitor", 1000);
+
+    expect(allow.tracked()).toBe(1);
+  });
+
+  test("keeps keys that are still inside their window", () => {
+    const allow = createRateLimiter({ limit: 1, windowMs: 1000 });
+    Array.from({ length: 1000 }, (_, key) => allow(String(key), 0));
+
+    allow("new visitor", 999);
+
+    expect(allow("0", 999)).toBe(false);
+  });
 });

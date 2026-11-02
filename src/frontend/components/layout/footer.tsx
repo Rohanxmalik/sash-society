@@ -28,8 +28,8 @@ const resourceLinks = [
 const policyLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms & Conditions", href: "/terms" },
-  { label: "Refund Policy", href: "/refund-policy" },
-  { label: "Delivery Policy", href: "/delivery-policy" },
+  { label: "Cancellation & Refund Policy", href: "/refund-policy" },
+  { label: "Shipping & Delivery Policy", href: "/delivery-policy" },
 ];
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {

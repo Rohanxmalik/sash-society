@@ -50,6 +50,11 @@ export default async function AdminOverviewPage() {
           href="/admin/events"
         />
         <Stat
+          label="Journal Work to Review"
+          value={overview.papersToReview}
+          href="/admin/journal"
+        />
+        <Stat
           label="Payments to Review"
           value={overview.needsReview}
           href="/admin/payments"

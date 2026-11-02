@@ -2,6 +2,7 @@ import {
   useId,
   type InputHTMLAttributes,
   type Ref,
+  type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from "react";
 
@@ -67,6 +68,26 @@ export function TextAreaField({ label, error, ...props }: TextAreaFieldProps) {
           {error}
         </p>
       )}
+    </div>
+  );
+}
+
+type SelectFieldProps = {
+  label: string;
+  children: React.ReactNode;
+} & SelectHTMLAttributes<HTMLSelectElement>;
+
+export function SelectField({ label, children, ...props }: SelectFieldProps) {
+  const id = useId();
+
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-ink mb-1.5">
+        {label}
+      </label>
+      <select id={id} className={CONTROL_CLASSES} {...props}>
+        {children}
+      </select>
     </div>
   );
 }

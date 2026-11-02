@@ -17,6 +17,7 @@ import {
   user,
 } from "@/backend/db/schema";
 import type { Db } from "@/backend/db/types";
+import { countPendingPapers } from "@/backend/journal/repository";
 import { formatDateIndia } from "@/shared/dates";
 import { findEvent } from "@/shared/events";
 import { formatMoneyPlain, type Currency } from "@/shared/money";
@@ -66,6 +67,7 @@ export async function getOverview(db: Db, now: Date) {
     pendingApprovals,
     confirmedRegistrations,
     needsReview,
+    papersToReview: await countPendingPapers(db),
     revenue: revenue.map((row) => ({
       currency: row.currency as Currency,
       amountMinor: Number(row.amountMinor),

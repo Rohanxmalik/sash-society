@@ -254,3 +254,94 @@ export function contactMessageEmail({
     replyTo: email,
   });
 }
+
+export function submissionReceivedEmail({
+  to,
+  name,
+  title,
+}: {
+  to: string;
+  name: string;
+  title: string;
+}): Email {
+  return compose({
+    to,
+    subject: "We have received your journal submission",
+    paragraphs: [
+      `Dear ${name},`,
+      `Thank you for submitting "${title}" to Explorations, the journal of the ${society.name}.`,
+      "The committee will review it, and we will email you the outcome.",
+    ],
+    footnote: `For questions, write to ${society.email}.`,
+  });
+}
+
+export function newSubmissionEmail({
+  to,
+  authorName,
+  authorEmail,
+  title,
+  reviewUrl,
+}: {
+  to: string;
+  authorName: string;
+  authorEmail: string;
+  title: string;
+  reviewUrl: string;
+}): Email {
+  return compose({
+    to,
+    subject: `New journal submission: ${title}`,
+    paragraphs: [
+      `${authorName} (${authorEmail}) has submitted "${title}".`,
+    ],
+    action: { label: "Review it in the admin panel", url: reviewUrl },
+    replyTo: authorEmail,
+  });
+}
+
+export function paperPublishedEmail({
+  to,
+  name,
+  title,
+  url,
+}: {
+  to: string;
+  name: string;
+  title: string;
+  url: string;
+}): Email {
+  return compose({
+    to,
+    subject: `Your work has been published: ${title}`,
+    paragraphs: [
+      `Dear ${name},`,
+      `Congratulations, "${title}" has been approved and published in Explorations.`,
+    ],
+    action: { label: "View the journal", url },
+    footnote: `For questions, write to ${society.email}.`,
+  });
+}
+
+export function paperNotAcceptedEmail({
+  to,
+  name,
+  title,
+  reason,
+}: {
+  to: string;
+  name: string;
+  title: string;
+  reason: string | null;
+}): Email {
+  return compose({
+    to,
+    subject: `Your journal submission: ${title}`,
+    paragraphs: [
+      `Dear ${name},`,
+      `Thank you for submitting "${title}". After review, the committee has not accepted it for publication.`,
+      ...(reason ? [`The committee's comment: ${reason}`] : []),
+    ],
+    footnote: `For questions, write to ${society.email}.`,
+  });
+}

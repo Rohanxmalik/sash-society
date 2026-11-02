@@ -27,13 +27,33 @@ test("the policies a payment provider checks for are all linked in the footer", 
   for (const name of [
     "Privacy Policy",
     "Terms & Conditions",
-    "Refund Policy",
-    "Delivery Policy",
+    "Cancellation & Refund Policy",
+    "Shipping & Delivery Policy",
   ]) {
     await footer.getByRole("link", { name }).click();
     await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
     await page.goBack();
   }
+});
+
+test("the header has a solid background on inner pages", async ({ page }) => {
+  await page.goto("/about");
+
+  await expect(page.getByRole("banner")).not.toHaveCSS(
+    "background-color",
+    "rgba(0, 0, 0, 0)"
+  );
+});
+
+test("the header stays see-through at the top of the home page", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await expect(page.getByRole("banner")).toHaveCSS(
+    "background-color",
+    "rgba(0, 0, 0, 0)"
+  );
 });
 
 test("the gallery page loads without broken images", async ({ page }) => {

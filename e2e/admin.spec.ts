@@ -39,6 +39,17 @@ test("a signed-out visitor is sent to login from the admin panel", async ({
   await expect(page).toHaveURL(/\/login\?next=%2Fadmin$/);
 });
 
+test("the admin menu is not hidden behind the site header", async ({ page }) => {
+  await signInAsAdmin(page);
+
+  const header = await page.getByRole("banner").boundingBox();
+  const menu = await page.getByRole("navigation", { name: "Admin" }).boundingBox();
+
+  expect(menu?.y).toBeGreaterThanOrEqual(
+    (header?.y ?? 0) + (header?.height ?? 0)
+  );
+});
+
 test("the admin finds a member and exports the list", async ({ page, browser }) => {
   const email = uniqueEmail();
   const memberPage = await (await browser.newContext()).newPage();

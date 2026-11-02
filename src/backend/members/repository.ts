@@ -1,6 +1,7 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { eventRegistrations, memberships, payments } from "@/backend/db/schema";
 import type { Db } from "@/backend/db/types";
+import { displayStatus } from "./rules";
 
 export type Membership = typeof memberships.$inferSelect;
 
@@ -19,6 +20,15 @@ export async function findLiveMembership(
     )
     .limit(1);
   return membership ?? null;
+}
+
+export async function hasActiveMembership(
+  db: Db,
+  userId: string,
+  now: Date
+): Promise<boolean> {
+  const live = await findLiveMembership(db, userId);
+  return live !== null && displayStatus(live, now) === "active";
 }
 
 export async function findMembership(
