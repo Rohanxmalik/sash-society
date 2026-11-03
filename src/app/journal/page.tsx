@@ -135,22 +135,8 @@ export default async function JournalPage() {
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-gold-dark mb-3">
                   Featured Publication
                 </h3>
-                <div className="space-y-3">
-                  <div className="p-3 bg-cream rounded-sm">
-                    <Badge variant="gold" className="mb-2">Special Edition</Badge>
-                    <p className="text-sm font-medium text-ink">
-                      SASS Journal: Climate Migration
-                    </p>
-                    <p className="text-xs text-ink-muted mt-1">Published 2025</p>
-                  </div>
-                  <div className="p-3 bg-cream rounded-sm">
-                    <p className="text-sm font-medium text-ink">
-                      Explorations E-Journal
-                    </p>
-                    <p className="text-xs text-ink-muted mt-1">
-                      Primary publication vehicle
-                    </p>
-                  </div>
+                <div className="p-3 bg-cream rounded-sm">
+                  <Badge variant="gold">Coming Soon</Badge>
                 </div>
               </Card>
             </div>
