@@ -14,8 +14,10 @@ type GalleryConference = {
 
 export function GalleryGrid({
   conferences,
+  showFilters = true,
 }: {
   conferences: GalleryConference[];
+  showFilters?: boolean;
 }) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [lightboxIndex, setLightboxIndex] = useState(-1);
@@ -33,21 +35,23 @@ export function GalleryGrid({
   return (
     <>
       {/* Filter tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {filters.map((filter) => (
-          <button
-            key={filter.id}
-            onClick={() => setActiveFilter(filter.id)}
-            className={`px-4 py-2 text-sm font-medium rounded-full border transition-all duration-300 ${
-              activeFilter === filter.id
-                ? "bg-brand-dark-teal text-white border-brand-dark-teal shadow-md"
-                : "bg-white text-ink-light border-ink/15 hover:border-brand-dark-teal hover:text-brand-dark-teal hover:shadow-sm"
-            }`}
-          >
-            {filter.label}
-          </button>
-        ))}
-      </div>
+      {showFilters && (
+        <div className="flex flex-wrap gap-2 mb-8">
+          {filters.map((filter) => (
+            <button
+              key={filter.id}
+              onClick={() => setActiveFilter(filter.id)}
+              className={`px-4 py-2 text-sm font-medium rounded-full border transition-all duration-300 ${
+                activeFilter === filter.id
+                  ? "bg-brand-dark-teal text-white border-brand-dark-teal shadow-md"
+                  : "bg-white text-ink-light border-ink/15 hover:border-brand-dark-teal hover:text-brand-dark-teal hover:shadow-sm"
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Grid */}
       <motion.div

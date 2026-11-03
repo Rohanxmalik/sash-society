@@ -68,6 +68,9 @@ export default function ConferencesPage() {
                     </div>
 
                     <div className="mt-6 flex flex-wrap gap-3">
+                      <Button href={`/conferences/${event.id}`} variant="secondary" size="sm">
+                        View Brochure
+                      </Button>
                       {event.registrationUrl && (
                         <Button href={event.registrationUrl} variant="primary" size="sm">
                           {event.registrationLabel ?? "Register"}{" "}

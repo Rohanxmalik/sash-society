@@ -29,6 +29,33 @@ describe("conference records", () => {
     });
   });
 
+  test.each(previousEvents.map((e) => [e.id, e] as const))(
+    "%s has its brochure on the site",
+    (_id, conference) => {
+      expect(conference.brochure?.concept.length).toBeGreaterThan(0);
+      expect(conference.brochure?.subThemes.length).toBeGreaterThan(0);
+    }
+  );
+
+  test("past brochures leave out payment and private contact details", () => {
+    const text = JSON.stringify(previousEvents);
+
+    for (const hidden of ["gmail", "925020058201066", "IFSC", "forms.gle", "+91", "Mob."]) {
+      expect(text).not.toContain(hidden);
+    }
+  });
+
+  test("every special lecture poster is on disk", () => {
+    const posters = previousEvents.flatMap(
+      (e) => e.brochure?.lectures?.map((lecture) => lecture.poster) ?? []
+    );
+
+    expect(posters).toHaveLength(5);
+    for (const poster of posters) {
+      expect(existsSync(path.join("public", poster))).toBe(true);
+    }
+  });
+
   test("the 3rd conference matches its brochure", () => {
     expect(findEvent("3rd-international-conference")).toMatchObject({
       theme:

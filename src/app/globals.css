@@ -86,9 +86,29 @@ html {
 }
 
 @media print {
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
+  [data-reveal],
+  [data-scroll-animated],
+  [data-scroll-animated] * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  /* The page title is white on teal, so the teal has to print. */
+  .bg-brand-dark-teal {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }
 

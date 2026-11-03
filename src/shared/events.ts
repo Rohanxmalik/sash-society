@@ -1,3 +1,6 @@
+import { firstConferenceBrochure } from "@/shared/conferences/first-2023";
+import { secondConferenceBrochure } from "@/shared/conferences/second-2025";
+import { thirdConferenceBrochure } from "@/shared/conferences/third-2026";
 import type { Event, RegistrationOption } from "@/shared/types";
 import { mauritius2027Details } from "./mauritius-2027";
 
@@ -47,11 +50,14 @@ export const previousEvents: Event[] = [
       "Science, Technology, and Society: Rethinking Knowledge, Power, and Innovation for an Inclusive and Sustainable Future",
     date: "2026-03-08",
     endDate: "2026-03-13",
+    dateLabel: "8-13 March 2026",
     location: "Singapore & Malaysia",
     format: "hybrid",
     status: "completed",
     image: "/images/events/singapore-malaysia-2026.jpg",
     galleryLink: "/conferences/gallery",
+    photos: "images/conferences/3rd-conference",
+    brochure: thirdConferenceBrochure,
   },
   {
     id: "2nd-international-conference",
@@ -59,13 +65,14 @@ export const previousEvents: Event[] = [
     theme: "South Asian Society: Today and Tomorrow",
     date: "2025-03-23",
     endDate: "2025-03-26",
+    dateLabel: "23-26 March 2025",
     location: "Dubai",
     format: "in-person",
     status: "completed",
-    brochureUrl:
-      "/documents/dubai-conference-brochure.pdf",
     image: "/images/events/dubai-2025.jpg",
     galleryLink: "/conferences/gallery",
+    photos: "images/conferences/2nd-conference",
+    brochure: secondConferenceBrochure,
   },
   {
     id: "1st-international-conference",
@@ -73,13 +80,14 @@ export const previousEvents: Event[] = [
     theme: "Sociology in South Asia",
     date: "2023-11-28",
     endDate: "2023-11-29",
+    dateLabel: "28-29 November 2023",
     location: "Online",
     format: "online",
     status: "completed",
-    brochureUrl:
-      "/documents/south-asia-conference-brochure.pdf",
     image: "/images/events/online-2023.jpg",
     galleryLink: "/conferences/gallery",
+    photos: "images/conferences/1st-conference",
+    brochure: firstConferenceBrochure,
   },
 ];
 

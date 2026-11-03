@@ -25,6 +25,29 @@ export interface ConferenceDetails {
   travelNote: string;
 }
 
+export interface SpecialLecture {
+  title: string;
+  series: string;
+  speaker: string;
+  speakerRole: string;
+  date: string;
+  poster: string;
+}
+
+// What a past conference's brochure carried, without registration, bank details
+// or personal contact details, which ended with the conference.
+export interface ConferenceBrochure {
+  organizers: string;
+  concept: string[];
+  questions?: string[];
+  objectives?: string[];
+  subThemesIntro?: string;
+  subThemes: { title: string; topics: string[] }[];
+  speakers?: { name: string; role: string }[];
+  lectures?: SpecialLecture[];
+  committee: { role: string; members: string[] }[];
+}
+
 export interface RegistrationOption {
   id: string;
   label: string;
@@ -52,10 +75,12 @@ export interface Event {
   status: "upcoming" | "completed";
   registrationUrl?: string;
   registrationLabel?: string;
-  brochureUrl?: string;
   image?: string;
   galleryLink?: string;
+  // Folder under public/ holding this conference's photos.
+  photos?: string;
   details?: ConferenceDetails;
+  brochure?: ConferenceBrochure;
   registration?: EventRegistration;
 }
 

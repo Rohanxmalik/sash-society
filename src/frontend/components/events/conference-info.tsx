@@ -2,7 +2,7 @@ import { Mail, Phone, Users } from "lucide-react";
 import { Card } from "@/frontend/components/ui/card";
 import type { ConferenceDetails } from "@/shared/types";
 
-function Section({
+export function Section({
   title,
   children,
 }: {

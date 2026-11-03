@@ -47,14 +47,17 @@ export default function PreviousEventsPage() {
                   <div className="mt-4 flex flex-wrap gap-4">
                     <div className="flex items-center gap-2 text-xs text-ink-muted">
                       <Calendar className="w-3.5 h-3.5" />
-                      {event.date}
+                      {event.dateLabel ?? event.date}
                     </div>
                     <div className="flex items-center gap-2 text-xs text-ink-muted">
                       <MapPin className="w-3.5 h-3.5" />
                       {event.location}
                     </div>
                   </div>
-                  <div className="mt-4 flex gap-3">
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <Button href={`/conferences/${event.id}`} variant="secondary" size="sm">
+                      View Brochure
+                    </Button>
                     {event.galleryLink && (
                       <Button href={event.galleryLink} variant="outline" size="sm">
                         View Gallery
