@@ -15,6 +15,7 @@ import {
   rejectMembership,
   removeMember,
   resendWelcomeEmail,
+  updateMemberEmail,
   type AdminResult,
 } from "./members";
 
@@ -72,6 +73,16 @@ export async function reinstateAction(formData: FormData) {
   const result = await reinstateMember(
     getPaymentDeps(),
     field(formData, "userId")
+  );
+  finish(memberPath(formData), result);
+}
+
+export async function updateMemberEmailAction(formData: FormData) {
+  await requireAdmin();
+  const result = await updateMemberEmail(
+    getDb(),
+    field(formData, "userId"),
+    field(formData, "email")
   );
   finish(memberPath(formData), result);
 }

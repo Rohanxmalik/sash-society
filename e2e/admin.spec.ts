@@ -155,6 +155,43 @@ test("the admin sees event registrations and exports them", async ({ page }) => 
   expect(await response.text()).toContain(email);
 });
 
+test("a member with no email is imported, listed, and can be given one", async ({
+  page,
+}) => {
+  const name = `Asha Noemail ${Date.now()}`;
+  const email = uniqueEmail();
+  const csv = [
+    "name,email,phone,designation,institution,plan,member_number,joined_on,expires_on",
+    `${name},,,,,life-india,,2026-11-03,`,
+  ].join("\n");
+
+  await signInAsAdmin(page);
+  await page.getByRole("link", { name: "Import", exact: true }).click();
+  await page.getByLabel("CSV File").setInputFiles({
+    name: "members.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(csv),
+  });
+  await page.getByRole("button", { name: "Import Members" }).click();
+  await expect(page.getByText("1 member imported")).toBeVisible();
+
+  await page.goto("/membership/members");
+  await page.getByLabel("Search members").fill(name);
+  const card = page.getByRole("listitem").filter({ hasText: name });
+  await expect(card).toContainText("Life Member");
+
+  await page.getByRole("button", { name: "Student Member", exact: true }).click();
+  await expect(card).toHaveCount(0);
+
+  await page.goto(`/admin/members?q=${encodeURIComponent(name)}`);
+  await page.getByRole("link", { name: "No email on file" }).click();
+  await page.getByLabel("Email Address").fill(email);
+  await page.getByRole("button", { name: "Update Email" }).click();
+
+  await expect(page.getByText("Email updated.")).toBeVisible();
+  await expect(page.getByText(email)).toBeVisible();
+});
+
 test("the admin imports existing members from a CSV", async ({ page }) => {
   const email = uniqueEmail();
   const csv = [

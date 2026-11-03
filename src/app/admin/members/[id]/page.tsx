@@ -5,6 +5,7 @@ import {
   rejectAction,
   removeAction,
   resendWelcomeAction,
+  updateMemberEmailAction,
 } from "@/backend/admin/actions";
 import { getMemberDetail } from "@/backend/admin/members";
 import { requireAdmin } from "@/backend/auth/session";
@@ -17,6 +18,7 @@ import { Button } from "@/frontend/components/ui/button";
 import { FormAlert } from "@/frontend/components/ui/form-alert";
 import { FormField } from "@/frontend/components/ui/form-field";
 import { formatDateIndia } from "@/shared/dates";
+import { hasRealEmail } from "@/shared/no-email";
 import { findEvent } from "@/shared/events";
 import { statusLabel } from "@/shared/membership-status";
 import { formatMoney, type Currency } from "@/shared/money";
@@ -101,15 +103,37 @@ export default async function AdminMemberPage({
 
   const { profile } = member;
   const now = new Date();
+  const memberHasEmail = hasRealEmail(member.email);
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-black text-ink font-heading">{member.name}</h1>
-        <p className="text-sm text-ink-light break-all">{member.email}</p>
+        <p className="text-sm text-ink-light break-all">
+          {memberHasEmail ? member.email : "No email on file"}
+        </p>
       </div>
 
       {notice && <FormAlert tone="success">{notice}</FormAlert>}
+
+      <form
+        action={updateMemberEmailAction}
+        className="flex flex-wrap items-end gap-3 max-w-lg"
+      >
+        <input type="hidden" name="userId" value={member.id} />
+        <div className="flex-1 min-w-56">
+          <FormField
+            label="Email Address"
+            name="email"
+            type="email"
+            required
+            defaultValue={memberHasEmail ? member.email : ""}
+          />
+        </div>
+        <Button type="submit" size="sm" variant="outline" className="mb-1">
+          Update Email
+        </Button>
+      </form>
 
       <dl className="grid gap-4 sm:grid-cols-3">
         <Field label="Phone" value={profile?.phone} />

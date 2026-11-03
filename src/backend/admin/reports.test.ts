@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { parseCsv } from "@/backend/csv";
+import { placeholderEmail } from "@/shared/no-email";
 import { fulfilPayment } from "@/backend/payments/fulfil";
 import { createEventOrder, createMembershipOrder } from "@/backend/payments/orders";
 import {
@@ -146,6 +147,14 @@ describe("csv exports", () => {
     expect(row).toContain("user-1@example.org");
     expect(row).toContain("Student Membership");
     expect(row).toContain("active");
+  });
+
+  test("the members export leaves the email blank when there is none", async () => {
+    await addMember(harness, "user-9", placeholderEmail("abc"));
+
+    const csv = await membersCsv(db(), NOW);
+
+    expect(csv).not.toContain(placeholderEmail("abc"));
   });
 
   test("event export is ready for the organisers", async () => {

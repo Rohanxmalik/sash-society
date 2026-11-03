@@ -7,6 +7,7 @@ import { Button } from "@/frontend/components/ui/button";
 import { FormField } from "@/frontend/components/ui/form-field";
 import { formatDateIndia } from "@/shared/dates";
 import { membershipStatusLabels, statusLabel } from "@/shared/membership-status";
+import { hasRealEmail } from "@/shared/no-email";
 import { findPlan, membershipPlans } from "@/shared/plans";
 
 const PAGE_SIZE = 50;
@@ -113,7 +114,7 @@ export default async function AdminMembersPage({
                 href={`/admin/members/${row.id}`}
                 className="text-brand-teal hover:underline"
               >
-                {row.email}
+                {hasRealEmail(row.email) ? row.email : "No email on file"}
               </Link>
             </Cell>
             <Cell>{row.phone}</Cell>

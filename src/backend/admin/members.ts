@@ -30,6 +30,7 @@ import type { PaymentDeps } from "@/backend/payments/deps";
 import { welcomeEmailFor } from "@/backend/payments/notify";
 import { safeLogValue } from "@/backend/safe-log";
 import { findPlan } from "@/shared/plans";
+import { emailAddress } from "@/shared/validation/fields";
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -330,6 +331,35 @@ export async function reinstateMember(
   });
 
   return { ok: true, message: "Member reinstated." };
+}
+
+export async function updateMemberEmail(
+  db: Db,
+  userId: string,
+  input: string
+): Promise<AdminResult> {
+  const parsed = emailAddress.safeParse(input.trim());
+  if (!parsed.success) {
+    return { ok: false, message: "Enter a valid email address." };
+  }
+
+  const [taken] = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(eq(user.email, parsed.data))
+    .limit(1);
+  if (taken && taken.id !== userId) {
+    return { ok: false, message: "Another member already uses this email." };
+  }
+
+  const updated = await db
+    .update(user)
+    .set({ email: parsed.data, emailVerified: true })
+    .where(eq(user.id, userId))
+    .returning({ id: user.id });
+  return updated.length > 0
+    ? { ok: true, message: "Email updated." }
+    : { ok: false, message: "This member could not be found." };
 }
 
 export async function resendWelcomeEmail(

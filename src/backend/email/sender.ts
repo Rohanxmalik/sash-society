@@ -1,6 +1,7 @@
 import { appendFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Resend } from "resend";
+import { hasRealEmail } from "@/shared/no-email";
 
 export type EmailAttachment = { filename: string; content: Uint8Array };
 
@@ -43,6 +44,8 @@ export function createEmailSender({
     const resend = new Resend(resendApiKey);
 
     return async ({ attachments, replyTo, ...email }) => {
+      if (!hasRealEmail(email.to)) return;
+
       const { error } = await resend.emails.send({
         from,
         ...email,
@@ -62,6 +65,8 @@ export function createEmailSender({
 
   // parseEnv requires Resend in production, so this path is development only.
   return async ({ attachments = [], ...email }) => {
+    if (!hasRealEmail(email.to)) return;
+
     console.info(`[dev-mail] ${email.subject} -> ${email.to}\n${email.text}`);
     if (!devMailFile) return;
 

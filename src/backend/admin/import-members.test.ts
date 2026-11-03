@@ -3,6 +3,7 @@ import { createAuth, handleAuthRequest } from "@/backend/auth/create-auth";
 import { memberships, profiles, user } from "@/backend/db/schema";
 import { findProfile } from "@/backend/profiles/repository";
 import { formatDateIndia } from "@/shared/dates";
+import { hasRealEmail } from "@/shared/no-email";
 import { addMember, createHarness, type Harness } from "@/backend/test/harness";
 import { importMembers } from "./import-members";
 
@@ -96,7 +97,7 @@ describe("importMembers", () => {
   });
 
   test("reports bad rows without stopping the good ones", async () => {
-    const bad = "No Email,,+91 98765 43210,Professor,,student,X,2026-01-15,";
+    const bad = "Bad Email,not-an-email,+91 98765 43210,Professor,,student,X,2026-01-15,";
     const unknownPlan =
       "Bad Plan,bad@example.org,+91 98765 43210,Professor,,gold,X,2026-01-15,";
 
@@ -109,6 +110,48 @@ describe("importMembers", () => {
     expect(result.problems).toHaveLength(2);
     expect(result.problems[0]).toContain("Row 2");
     expect(result.problems[1]).toContain("Row 4");
+  });
+
+  describe("a member with no email on the list", () => {
+    const noEmail = (name: string) =>
+      `${name},,,,,life-india,,2026-11-03,`;
+
+    test("is still added as an active member", async () => {
+      const result = await importMembers(db(), `${HEADER}\n${noEmail("Asha Rao")}\n`);
+
+      const [account] = await db().select().from(user);
+      const [membership] = await db().select().from(memberships);
+      expect(result).toEqual({ created: 1, problems: [] });
+      expect(hasRealEmail(account.email)).toBe(false);
+      expect(account.emailVerified).toBe(false);
+      expect(membership.status).toBe("active");
+    });
+
+    test("several can be added from one file", async () => {
+      const csv = [HEADER, noEmail("Asha Rao"), noEmail("Bilal Khan")].join("\n");
+
+      expect((await importMembers(db(), csv)).created).toBe(2);
+    });
+
+    test("is not added twice when the file is uploaded again", async () => {
+      const csv = `${HEADER}\n${noEmail("Asha Rao")}\n`;
+      await importMembers(db(), csv);
+
+      const second = await importMembers(db(), csv);
+
+      expect(second.created).toBe(0);
+      expect(second.problems[0]).toContain("Asha Rao");
+      expect(await db().select().from(user)).toHaveLength(1);
+    });
+
+    test("a mistyped email is refused, not treated as missing", async () => {
+      const row = "Asha Rao,asha-at-example,,,,life-india,,2026-11-03,";
+
+      const result = await importMembers(db(), `${HEADER}\n${row}\n`);
+
+      expect(result.created).toBe(0);
+      expect(result.problems[0]).toContain("Row 2");
+    });
   });
 
   test("refuses a file with the wrong columns", async () => {

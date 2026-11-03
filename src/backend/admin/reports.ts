@@ -21,6 +21,7 @@ import { countPendingPapers } from "@/backend/journal/repository";
 import { formatDateIndia } from "@/shared/dates";
 import { findEvent } from "@/shared/events";
 import { formatMoneyPlain, type Currency } from "@/shared/money";
+import { hasRealEmail } from "@/shared/no-email";
 import { findPlan } from "@/shared/plans";
 import { listMembers } from "./members";
 
@@ -168,7 +169,7 @@ export async function membersCsv(db: Db, now: Date) {
     ],
     rows.map((row) => [
       row.name,
-      row.email,
+      hasRealEmail(row.email) ? row.email : "",
       row.phone,
       row.designation,
       row.institution,

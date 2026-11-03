@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { memberships, payments, session, user } from "@/backend/db/schema";
 import { fulfilPayment } from "@/backend/payments/fulfil";
+import { hasRealEmail, placeholderEmail } from "@/shared/no-email";
 import { createMembershipOrder } from "@/backend/payments/orders";
 import {
   addLiveMembership,
@@ -18,6 +19,7 @@ import {
   rejectMembership,
   removeMember,
   resendWelcomeEmail,
+  updateMemberEmail,
 } from "./members";
 
 const ADMIN = "admin@example.org";
@@ -340,6 +342,43 @@ describe("listMembers", () => {
 
     expect(rows).toHaveLength(1);
     expect(total).toBe(2);
+  });
+});
+
+describe("updateMemberEmail", () => {
+  beforeEach(async () => {
+    await addMember(harness, "user-1", placeholderEmail("abc"));
+    await addMember(harness, "user-2");
+  });
+
+  const emailOf = async (id: string) =>
+    (await getMemberDetail(db(), id))?.email;
+
+  test("gives a member a real address", async () => {
+    const result = await updateMemberEmail(db(), "user-1", "Asha@Example.org");
+
+    expect(result.ok).toBe(true);
+    expect(await emailOf("user-1")).toBe("asha@example.org");
+  });
+
+  test("refuses an address that is not an email", async () => {
+    const result = await updateMemberEmail(db(), "user-1", "not an email");
+
+    expect(result.ok).toBe(false);
+    expect(hasRealEmail((await emailOf("user-1")) ?? "")).toBe(false);
+  });
+
+  test("refuses an address another member already uses", async () => {
+    const result = await updateMemberEmail(db(), "user-1", "user-2@example.org");
+
+    expect(result.ok).toBe(false);
+    expect(result.message).toContain("already");
+  });
+
+  test("reports an unknown member", async () => {
+    const result = await updateMemberEmail(db(), "nobody", "a@example.org");
+
+    expect(result.ok).toBe(false);
   });
 });
 

@@ -7,7 +7,8 @@ import { memberships, profiles, user } from "@/backend/db/schema";
 import type { Db } from "@/backend/db/types";
 import { safeLogValue } from "@/backend/safe-log";
 import { clientConfig } from "@/shared/client-config";
-import { membershipPlans } from "@/shared/plans";
+import { hasRealEmail, placeholderEmail } from "@/shared/no-email";
+import { DEFAULT_DESIGNATION, membershipPlans } from "@/shared/plans";
 import { optionalText, requiredText } from "@/shared/validation/fields";
 
 const COLUMNS = [
@@ -22,7 +23,6 @@ const COLUMNS = [
   "expires_on",
 ] as const;
 
-const DEFAULT_DESIGNATION = "Member";
 const FIRST_DATA_ROW = 2;
 
 const isoDate = z.iso.date("Use the date format YYYY-MM-DD");
@@ -32,7 +32,13 @@ const blankToUndefined = (value: unknown) => (value === "" ? undefined : value);
 // required. Members can fill in the rest from their profile.
 const rowSchema = z.object({
   name: requiredText("Name is required"),
-  email: z.email("Email is missing or invalid").transform((v) => v.toLowerCase()),
+  email: z.preprocess(
+    blankToUndefined,
+    z
+      .email("Email is invalid")
+      .transform((v) => v.toLowerCase())
+      .optional()
+  ),
   phone: z.string().trim().max(30).default(""),
   designation: optionalText(),
   institution: optionalText(),
@@ -54,25 +60,41 @@ const findPlanByText = (value: string) =>
 const startOfDay = (date: string) => new Date(`${date}T00:00:00Z`);
 const endOfDay = (date: string) => new Date(`${date}T23:59:59+05:30`);
 
+// With no email to match on, the name stops a second upload adding them again.
+async function findDuplicate(db: Db, row: z.output<typeof rowSchema>) {
+  if (row.email) {
+    const [existing] = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(eq(user.email, row.email))
+      .limit(1);
+    return existing ? `${row.email} already has an account` : null;
+  }
+
+  const [existing] = await db
+    .select({ userId: profiles.userId })
+    .from(profiles)
+    .where(eq(profiles.fullName, row.name))
+    .limit(1);
+  return existing ? `${row.name} is already on the list` : null;
+}
+
 async function importRow(db: Db, row: z.output<typeof rowSchema>) {
   const plan = findPlanByText(row.plan);
   if (!plan) return `Unknown plan "${row.plan}"`;
 
-  const [existing] = await db
-    .select({ id: user.id })
-    .from(user)
-    .where(eq(user.email, row.email))
-    .limit(1);
-  if (existing) return `${row.email} already has an account`;
+  const duplicate = await findDuplicate(db, row);
+  if (duplicate) return duplicate;
 
+  const email = row.email ?? placeholderEmail(randomUUID());
   const joinedOn = startOfDay(row.joined_on);
   await db.transaction(async (tx) => {
     const userId = randomUUID();
     await tx.insert(user).values({
       id: userId,
       name: row.name,
-      email: row.email,
-      emailVerified: true,
+      email,
+      emailVerified: hasRealEmail(email),
     });
     await tx.insert(profiles).values({
       userId,

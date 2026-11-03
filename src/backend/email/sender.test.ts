@@ -2,6 +2,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { placeholderEmail } from "@/shared/no-email";
 import { createEmailSender } from "./sender";
 
 const EMAIL = {
@@ -21,6 +22,17 @@ vi.mock("resend", () => ({
 
 describe("createEmailSender with Resend", () => {
   beforeEach(() => send.mockReset());
+
+  test("sends nothing to a member with no email on file", async () => {
+    const sendEmail = createEmailSender({
+      resendApiKey: "re_test",
+      from: "SASS <no-reply@example.org>",
+    });
+
+    await sendEmail({ ...EMAIL, to: placeholderEmail("abc") });
+
+    expect(send).not.toHaveBeenCalled();
+  });
 
   test("sends from the configured address", async () => {
     send.mockResolvedValue({ data: { id: "1" }, error: null, headers: null });

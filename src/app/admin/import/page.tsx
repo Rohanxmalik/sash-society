@@ -25,6 +25,12 @@ export default async function AdminImportPage() {
           &ldquo;Forgot password&rdquo; on the login page, using the same email.
         </p>
         <p>
+          Email can be left blank. That member still appears on the members list
+          but cannot log in until you add their email on their member page.
+          Membership fields left blank never expire, so give Ordinary and Student
+          members an expiry date.
+        </p>
+        <p>
           Plan codes:{" "}
           {membershipPlans.map(({ slug }) => slug).join(", ")}.
         </p>
