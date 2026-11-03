@@ -175,7 +175,7 @@ Access comes from the `ADMIN_EMAILS` variable, and there are no admin roles in t
 - **Remove member**: bans the account, deletes their sessions, and marks the membership `removed`. They drop off the members list and cannot log in by any route. No refund is made. **Reinstate** reverses it.
 - **Events**: registrations per event with CSV export.
 - **Payments**: every paid or refunded payment, notes that need review, and a button to send a stuck email.
-- **Import**: adds existing members from a CSV, using `public/member-import-template.csv`. Rows with problems are listed and skipped. Nobody is emailed, and imported members use "Forgot password" to get in.
+- **Import**: adds existing members from a CSV, using `public/member-import-template.csv`. Rows with problems are listed and skipped. A blank email is allowed: the member joins the list, and an admin adds the address later on their member page, which is what lets them sign in. Nobody is emailed, and imported members use "Forgot password" to get in.
 
 CSV exports have a BOM so Excel reads Indian names correctly, and formula-like cells are neutralised.
 
@@ -191,6 +191,8 @@ CSV exports have a BOM so Excel reads Indian names correctly, and formula-like c
 | Journal article types | `src/shared/validation/journal.ts` |
 | Gallery photos | `public/images/conferences/1st-conference/`, `2nd-conference/` and `3rd-conference/`, then redeploy. Files show in name order. |
 | Achievement awards | `src/frontend/content/awards.ts` |
+| Past conference pages | `src/shared/conferences/`. Each conference has a page at `/conferences/<id>`, and Save as PDF uses the browser's print window. Special lecture posters are in `public/images/lectures/`. |
+| Homepage quick links | `src/frontend/components/home/quick-links.tsx` |
 | Policies | `src/frontend/content/legal.ts`, and update `LEGAL_UPDATED_ON` |
 | Society email, social links, footer credit | `src/shared/site-config.ts`. A social link set to `#` shows the icon but goes nowhere. |
 | Scroll animation | `src/frontend/components/layout/scroll-reveal.tsx` runs on every page from the root layout. Anything using `ScrollAnimate`, or marked `data-scroll-animated`, is left alone. |

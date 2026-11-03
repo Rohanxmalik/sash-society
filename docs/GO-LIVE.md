@@ -126,7 +126,7 @@ All of it goes in one commit, then merge to `main` and Render redeploys.
 
 - [ ] Each admin signs up on the site with the exact email in `ADMIN_EMAILS`.
 - [ ] They open `/admin`. If it sends them to the home page, the email does not match the variable.
-- [ ] **Import**: upload the existing members CSV, starting from the template on that page. Fix any rows it lists and upload those again.
+- [ ] **Import**: upload the existing members CSV, starting from the template on that page. Fix any rows it lists and upload those again. A blank email is fine: add it later on the member's page in `/admin/members`.
 
 ## 14. Check everything
 
