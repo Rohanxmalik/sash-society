@@ -7,13 +7,16 @@ export const siteConfig = {
   address:
     "H NO-2, Sec-K, Near Rashtrawadi Bhavan, Cidco, N-11, Aurangabad, Maharashtra – 431001",
   phone: "+91 9415688058",
-  emails: ["southasiansociety2@gmail.com", "societyinsass@gmail.com"],
+  email: "info@sass-socio.org",
+  // "#" is a placeholder until the client sends the profile link.
   social: {
     twitter: "https://x.com/asian_south1",
     youtube: "https://youtu.be/HD8phbH5Bpk?si=uqUgt97OKo6kLYcG",
     instagram: "#",
+    facebook: "#",
     linkedin: "#",
   },
+  credit: { name: "GenosAI", url: "https://genosai.tech" },
   stats: [
     { value: "3", label: "International Conferences" },
     { value: "6+", label: "Countries Represented" },

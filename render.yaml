@@ -17,7 +17,7 @@ services:
       - key: BETTER_AUTH_URL
         value: https://sass-socio.org
       - key: EMAIL_FROM
-        value: SASS <no-reply@sass-socio.org>
+        value: SASS <info@sass-socio.org>
       - key: BETTER_AUTH_SECRET
         generateValue: true
       - key: RAZORPAY_WEBHOOK_SECRET

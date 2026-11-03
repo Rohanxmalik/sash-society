@@ -250,7 +250,7 @@ test("the admin is told when new work arrives", async ({ page }) => {
 
   await expect
     .poll(() =>
-      mailSentTo("southasiansociety2@gmail.com").some((mail) =>
+      mailSentTo("info@sass-socio.org").some((mail) =>
         mail.subject.includes(title)
       )
     )

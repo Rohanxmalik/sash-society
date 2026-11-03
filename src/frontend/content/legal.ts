@@ -8,10 +8,10 @@ export type LegalDocument = {
   sections: LegalSection[];
 };
 
-const { name, emails, address, phone } = siteConfig;
-const CONTACT_LINE = `${name}, ${address}. Email: ${emails[0]}. Phone: ${phone}.`;
+const { name, email, address, phone } = siteConfig;
+const CONTACT_LINE = `${name}, ${address}. Email: ${email}. Phone: ${phone}.`;
 
-export const LEGAL_UPDATED_ON = "2 November 2026";
+export const LEGAL_UPDATED_ON = "3 November 2026";
 
 export const privacyPolicy: LegalDocument = {
   title: "Privacy Policy",
@@ -28,7 +28,7 @@ export const privacyPolicy: LegalDocument = {
       paragraphs: [
         "When you create an account, we collect your name, email address, phone number, designation and password.",
         "When you join as a member or register for an event, we also collect your affiliation and, where you give them, your paper title and sub-theme. For organisation plans we collect the organisation's name.",
-        "You may choose to add your institution, country, education, experience, publications and a profile photo.",
+        "You may choose to add your institution, country, education, experience, publications, website and a profile photo.",
         "When you submit work to the journal, we keep your file along with its title, authors and abstract.",
         "Payments are handled by Razorpay. We receive a payment reference and the amount paid. We never see or store your card, UPI or bank details.",
         "When you use the contact form, we receive the details you enter there. We also keep basic technical records, such as IP addresses, to protect the site from abuse.",

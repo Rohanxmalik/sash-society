@@ -50,14 +50,12 @@ export default function ContactPage() {
                       {siteConfig.phone}
                     </a>
                   </li>
-                  {siteConfig.emails.map((email) => (
-                    <li key={email} className="flex gap-3 text-sm text-ink-light">
-                      <Mail className="w-5 h-5 shrink-0 text-brand-teal" />
-                      <a href={`mailto:${email}`} className="hover:text-brand-dark-teal break-all">
-                        {email}
-                      </a>
-                    </li>
-                  ))}
+                  <li className="flex gap-3 text-sm text-ink-light">
+                    <Mail className="w-5 h-5 shrink-0 text-brand-teal" />
+                    <a href={`mailto:${siteConfig.email}`} className="hover:text-brand-dark-teal break-all">
+                      {siteConfig.email}
+                    </a>
+                  </li>
                 </ul>
               </Card>
 
@@ -71,10 +69,10 @@ export default function ContactPage() {
                       <li key={dept}>
                         <p className="text-sm font-medium text-ink">{dept}</p>
                         <a
-                          href="mailto:southasiansociety2@gmail.com"
+                          href={`mailto:${siteConfig.email}`}
                           className="text-xs text-ink-muted hover:text-brand-dark-teal"
                         >
-                          southasiansociety2@gmail.com
+                          {siteConfig.email}
                         </a>
                       </li>
                     )

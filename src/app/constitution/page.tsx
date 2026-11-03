@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/frontend/components/ui/page-hero";
 import { Container } from "@/frontend/components/ui/container";
+import { siteConfig } from "@/shared/site-config";
 
 export const metadata: Metadata = {
   title: "Constitution",
@@ -173,10 +174,10 @@ export default function ConstitutionPage() {
                   by-laws, and appendices, please contact the SASS office or
                   email{" "}
                   <a
-                    href="mailto:southasiansociety2@gmail.com"
+                    href={`mailto:${siteConfig.email}`}
                     className="text-brand-dark-teal hover:underline"
                   >
-                    southasiansociety2@gmail.com
+                    {siteConfig.email}
                   </a>
                   .
                 </p>

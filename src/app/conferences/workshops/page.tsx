@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/frontend/components/ui/page-hero";
 import { Container } from "@/frontend/components/ui/container";
 import { BookOpen } from "lucide-react";
+import { siteConfig } from "@/shared/site-config";
 
 export const metadata: Metadata = {
   title: "Young Research Scholars Workshop",
@@ -34,10 +35,10 @@ export default function WorkshopsPage() {
             <p className="mt-4 text-sm text-ink-muted">
               For inquiries, contact{" "}
               <a
-                href="mailto:southasiansociety2@gmail.com"
+                href={`mailto:${siteConfig.email}`}
                 className="text-brand-dark-teal hover:underline"
               >
-                southasiansociety2@gmail.com
+                {siteConfig.email}
               </a>
             </p>
           </div>

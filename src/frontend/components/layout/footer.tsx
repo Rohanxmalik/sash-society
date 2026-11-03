@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Container } from "@/frontend/components/ui/container";
 import { ScrollAnimate } from "@/frontend/components/ui/scroll-animate";
+import { SocialIcon, type SocialNetwork } from "@/frontend/components/ui/social-icon";
 import { siteConfig } from "@/shared/site-config";
 
 const quickLinks = [
@@ -31,6 +32,63 @@ const policyLinks = [
   { label: "Cancellation & Refund Policy", href: "/refund-policy" },
   { label: "Shipping & Delivery Policy", href: "/delivery-policy" },
 ];
+
+const NO_PROFILE_YET = "#";
+
+const socialLinks: { label: string; href: string; network: SocialNetwork }[] = [
+  { label: "X", href: siteConfig.social.twitter, network: "x" },
+  { label: "Instagram", href: siteConfig.social.instagram, network: "instagram" },
+  { label: "Facebook", href: siteConfig.social.facebook, network: "facebook" },
+  { label: "LinkedIn", href: siteConfig.social.linkedin, network: "linkedin" },
+  { label: "YouTube", href: siteConfig.social.youtube, network: "youtube" },
+];
+
+function SocialLink({
+  label,
+  href,
+  network,
+}: {
+  label: string;
+  href: string;
+  network: SocialNetwork;
+}) {
+  const hasProfile = href !== NO_PROFILE_YET;
+
+  return (
+    <motion.a
+      href={href}
+      aria-label={label}
+      target={hasProfile ? "_blank" : undefined}
+      rel={hasProfile ? "noopener noreferrer" : undefined}
+      onClick={hasProfile ? undefined : (event) => event.preventDefault()}
+      whileHover={{ y: -2 }}
+      className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-white/55 hover:text-brand-gold hover:bg-white/10 transition-colors duration-300"
+    >
+      <SocialIcon network={network} className="w-4 h-4" />
+    </motion.a>
+  );
+}
+
+function CreditLink() {
+  return (
+    <motion.a
+      href={siteConfig.credit.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      whileHover={{ y: -2 }}
+      className="group/credit inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-brand-gold/25 bg-white/5 px-4 py-2 text-xs text-white/55 hover:border-brand-gold/60 hover:bg-white/10 transition-colors duration-300"
+    >
+      <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+      <span>
+        Designed and developed by{" "}
+        <span className="credit-shimmer font-semibold">
+          {siteConfig.credit.name}
+        </span>
+      </span>
+      <ArrowUpRight className="w-3.5 h-3.5 text-brand-gold transition-transform duration-200 group-hover/credit:translate-x-0.5 group-hover/credit:-translate-y-0.5" />
+    </motion.a>
+  );
+}
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -78,22 +136,9 @@ export function Footer() {
                 Asia since 2025.
               </p>
               {/* Social Links */}
-              <div className="flex gap-4 mt-6">
-                {[
-                  { label: "Twitter/X", href: siteConfig.social.twitter },
-                  { label: "YouTube", href: siteConfig.social.youtube },
-                  { label: "LinkedIn", href: siteConfig.social.linkedin },
-                ].map((social) => (
-                  <motion.a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ y: -2 }}
-                    className="text-white/45 hover:text-brand-gold transition-colors duration-300 text-sm font-medium"
-                  >
-                    {social.label}
-                  </motion.a>
+              <div className="flex gap-3 mt-6">
+                {socialLinks.map((social) => (
+                  <SocialLink key={social.label} {...social} />
                 ))}
               </div>
             </div>
@@ -157,19 +202,17 @@ export function Footer() {
                     {siteConfig.phone}
                   </a>
                 </li>
-                {siteConfig.emails.map((email) => (
-                  <li key={email} className="flex gap-3 text-sm text-white/55 group">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-brand-gold/20 transition-colors duration-300">
-                      <Mail className="w-4 h-4 text-brand-gold" />
-                    </div>
-                    <a
-                      href={`mailto:${email}`}
-                      className="hover:text-white transition-colors duration-200 break-all self-center"
-                    >
-                      {email}
-                    </a>
-                  </li>
-                ))}
+                <li className="flex gap-3 text-sm text-white/55 group">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-brand-gold/20 transition-colors duration-300">
+                    <Mail className="w-4 h-4 text-brand-gold" />
+                  </div>
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    className="hover:text-white transition-colors duration-200 break-all self-center"
+                  >
+                    {siteConfig.email}
+                  </a>
+                </li>
               </ul>
             </div>
           </ScrollAnimate>
@@ -179,22 +222,25 @@ export function Footer() {
       {/* Copyright */}
       <div className="border-t border-white/10">
         <Container className="py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/35">
-            <p>
-              &copy; {new Date().getFullYear()} South Asian Sociological Society.
-              All rights reserved.
-            </p>
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              {policyLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="hover:text-white/60 transition-colors duration-200"
-                >
-                  {link.label}
-                </Link>
-              ))}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-5">
+            <div className="text-xs text-white/35 text-center md:text-left">
+              <p>
+                &copy; {new Date().getFullYear()} South Asian Sociological Society.
+                All rights reserved.
+              </p>
+              <div className="mt-2 flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2">
+                {policyLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="hover:text-white/60 transition-colors duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
+            <CreditLink />
           </div>
         </Container>
       </div>

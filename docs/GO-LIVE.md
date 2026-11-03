@@ -30,9 +30,9 @@ Render and the scheduled GitHub Actions both use `main`, so anything going live 
 - [ ] Add the domain `sass-socio.org`, region Tokyo or the closest offered.
 - [ ] Add the DNS records it shows you at the registrar, then press Verify.
 - [ ] Create an API key with **Sending access** only. This is `RESEND_API_KEY`.
-- [ ] Set `EMAIL_FROM` to `SASS <no-reply@sass-socio.org>`.
+- [ ] Set `EMAIL_FROM` to `SASS <info@sass-socio.org>`.
 
-The contact form sends to `southasiansociety2@gmail.com`, with Reply-To set to the visitor.
+The contact form sends to `info@sass-socio.org`, with Reply-To set to the visitor. Resend only sends, so that inbox has to exist with the domain's email host.
 
 ## 5. Get the Razorpay keys
 

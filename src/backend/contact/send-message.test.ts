@@ -27,7 +27,7 @@ describe("sendContactMessage", () => {
     const result = await sendContactMessage(sendEmail, VALID);
 
     expect(result).toEqual({ ok: true });
-    expect(mail[0].to).toBe("southasiansociety2@gmail.com");
+    expect(mail[0].to).toBe("info@sass-socio.org");
     expect(mail[0].replyTo).toBe("asha@example.org");
     expect(mail[0].text).toContain("Life plan");
   });

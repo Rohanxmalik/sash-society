@@ -62,7 +62,7 @@ describe("submitWork for an active member", () => {
 
     const recipients = harness.mail.map((mail) => mail.to);
     expect(recipients).toContain(AUTHOR.email);
-    expect(recipients).toContain("southasiansociety2@gmail.com");
+    expect(recipients).toContain("info@sass-socio.org");
   });
 
   test("keeps the work even when the emails fail", async () => {

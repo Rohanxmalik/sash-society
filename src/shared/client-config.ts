@@ -9,7 +9,7 @@ export const clientConfig = {
     shortName: siteConfig.shortName,
     address: siteConfig.address,
     phone: siteConfig.phone,
-    email: siteConfig.emails[0],
+    email: siteConfig.email,
     // Leave null unless GST-registered. Decides "Payment Receipt" or "Invoice".
     gstin: null as string | null,
   },

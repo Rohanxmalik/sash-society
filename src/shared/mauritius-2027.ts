@@ -1,3 +1,4 @@
+import { siteConfig } from "@/shared/site-config";
 import type { ConferenceDetails } from "@/shared/types";
 
 export const mauritius2027Details: ConferenceDetails = {
@@ -135,7 +136,7 @@ export const mauritius2027Details: ConferenceDetails = {
     "Full paper: 4,000-5,000 words, in English or Hindi, using APA citation style.",
     "English papers: MS Word, Times New Roman, size 12, 1.5 line spacing.",
     "Hindi papers: Unicode font, size 14, 1.5 line spacing.",
-    "Submit the abstract and full paper as an email attachment, with the registration fee receipt, to southasiansociety2@gmail.com.",
+    `Submit the abstract and full paper as an email attachment, with the registration fee receipt, to ${siteConfig.email}.`,
   ],
   committee: [
     {
@@ -237,8 +238,8 @@ export const mauritius2027Details: ConferenceDetails = {
     },
     {
       label: "Email",
-      value: "southasiansociety2@gmail.com",
-      href: "mailto:southasiansociety2@gmail.com",
+      value: siteConfig.email,
+      href: `mailto:${siteConfig.email}`,
     },
   ],
   travelNote:

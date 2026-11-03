@@ -56,10 +56,10 @@ export default async function MembershipPage({
             <p className="text-ink-light leading-relaxed">
               For membership inquiries, contact us at{" "}
               <a
-                href={`mailto:${siteConfig.emails[0]}`}
+                href={`mailto:${siteConfig.email}`}
                 className="text-brand-dark-teal font-medium hover:underline"
               >
-                {siteConfig.emails[0]}
+                {siteConfig.email}
               </a>{" "}
               or call{" "}
               <a
