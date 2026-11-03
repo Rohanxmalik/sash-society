@@ -21,6 +21,7 @@ export type ProfileFormValues = {
   education: string;
   experience: string;
   publications: string;
+  website: string;
   showInDirectory: boolean;
 };
 
@@ -80,6 +81,14 @@ export function ProfileForm({ initial }: { initial: ProfileFormValues }) {
           label="Country"
           autoComplete="country-name"
           error={errors.country?.message}
+        />
+        <FormField
+          {...register("website")}
+          label="Website"
+          type="url"
+          autoComplete="url"
+          placeholder="https://www.yourwebsite.com"
+          error={errors.website?.message}
         />
       </div>
 

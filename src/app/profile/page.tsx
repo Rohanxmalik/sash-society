@@ -113,6 +113,7 @@ export default async function ProfilePage() {
                   education: profile?.education ?? "",
                   experience: profile?.experience ?? "",
                   publications: profile?.publications ?? "",
+                  website: profile?.website ?? "",
                   showInDirectory: profile?.showInDirectory ?? true,
                 }}
               />

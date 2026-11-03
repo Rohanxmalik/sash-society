@@ -25,6 +25,7 @@ const INPUT = {
   education: "PhD Sociology",
   experience: "10 years teaching",
   publications: "Caste and AI (2025)",
+  website: "https://asha.example.org",
   showInDirectory: true,
 };
 
@@ -71,6 +72,13 @@ describe("profiles repository", () => {
     await saveProfile(db(), "user-1", { ...INPUT, publications: undefined });
 
     expect((await findProfile(db(), "user-1"))?.publications).toBeNull();
+  });
+
+  test("clearing the website on update removes it", async () => {
+    await saveProfile(db(), "user-1", INPUT);
+    await saveProfile(db(), "user-1", { ...INPUT, website: undefined });
+
+    expect((await findProfile(db(), "user-1"))?.website).toBeNull();
   });
 
   test("saving one member's profile leaves others untouched", async () => {

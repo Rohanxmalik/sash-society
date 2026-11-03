@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { optionalText, personName, phoneNumber, requiredText } from "./fields";
+import {
+  optionalText,
+  optionalWebsite,
+  personName,
+  phoneNumber,
+  requiredText,
+} from "./fields";
 
 const MAX_LONG_TEXT = 4000;
 const MAX_PHOTO_LENGTH = 400_000;
@@ -15,6 +21,7 @@ export const profileSchema = z.object({
   education: optionalText(MAX_LONG_TEXT),
   experience: optionalText(MAX_LONG_TEXT),
   publications: optionalText(MAX_LONG_TEXT),
+  website: optionalWebsite,
   showInDirectory: z.boolean().default(true),
 });
 

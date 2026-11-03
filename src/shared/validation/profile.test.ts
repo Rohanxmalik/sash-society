@@ -41,6 +41,42 @@ describe("profileSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  test.each([
+    ["https://asha.example.org", "https://asha.example.org"],
+    ["http://asha.example.org/about", "http://asha.example.org/about"],
+    ["  https://asha.example.org  ", "https://asha.example.org"],
+    ["asha.example.org", "https://asha.example.org"],
+    ["www.asha.example.org:8080/cv", "https://www.asha.example.org:8080/cv"],
+  ])("accepts the website %s", (website, expected) => {
+    expect(profileSchema.parse({ ...VALID, website }).website).toBe(expected);
+  });
+
+  test.each([
+    "javascript:alert(1)",
+    "JavaScript:alert(1)",
+    "java\tscript:alert(1)",
+    "data:text/html,<script>alert(1)</script>",
+    "ftp://asha.example.org",
+    "not a website",
+    "localhost",
+    `https://example.org/${"x".repeat(200)}`,
+  ])("rejects the website %s", (website) => {
+    expect(profileSchema.safeParse({ ...VALID, website }).success).toBe(false);
+  });
+
+  test("a website stays valid when the form and the server both check it", () => {
+    const once = profileSchema.parse({ ...VALID, website: "asha.example.org" });
+
+    expect(profileSchema.parse(once).website).toBe(once.website);
+  });
+
+  test("a website is optional", () => {
+    expect(profileSchema.parse(VALID).website).toBeUndefined();
+    expect(
+      profileSchema.parse({ ...VALID, website: "   " }).website
+    ).toBeUndefined();
+  });
+
   test("drops fields it does not know", () => {
     const parsed = profileSchema.parse({ ...VALID, userId: "someone-else" });
     expect(parsed).not.toHaveProperty("userId");

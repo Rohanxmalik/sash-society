@@ -13,6 +13,7 @@ export const profiles = pgTable("profiles", {
   education: text("education"),
   experience: text("experience"),
   publications: text("publications"),
+  website: text("website"),
   // A compressed image as a data URL. At 30-50 sign-ups a month this stays far
   // below the database limit, so no separate storage service is needed.
   photo: text("photo"),

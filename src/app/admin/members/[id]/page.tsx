@@ -116,6 +116,7 @@ export default async function AdminMemberPage({
         <Field label="Designation" value={profile?.designation} />
         <Field label="Institution" value={profile?.institution} />
         <Field label="Country" value={profile?.country} />
+        <Field label="Website" value={profile?.website} />
         <Field label="Signed Up" value={formatDateIndia(member.createdAt)} />
         <Field label="Removal Reason" value={member.banned ? member.banReason : null} />
       </dl>

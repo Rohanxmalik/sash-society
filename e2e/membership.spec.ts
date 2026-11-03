@@ -39,7 +39,7 @@ test("a new visitor joins, pays, sees the welcome and finds the plan on their pr
   await expect(
     page.getByRole("heading", { name: "Welcome to SASS Society" })
   ).toBeVisible();
-  await expect(page).toHaveURL("/", { timeout: 15_000 });
+  await expect(page).toHaveURL("/");
 
   await page.goto("/profile");
   await expect(page.getByText("Life Membership (India)")).toBeVisible();
@@ -120,12 +120,24 @@ test("a member can update their profile", async ({ page }) => {
   await page.getByLabel("Education").fill("St Xavier's College, Mumbai");
   await page.getByLabel("Experience").fill("Ten years of teaching");
   await page.getByLabel("Publications").fill("Caste and the City (2021)");
+  await page.getByLabel("Website").fill("asha.example.org");
   await page.getByRole("button", { name: "Save Profile" }).click();
   await expect(page.getByText("Your profile has been saved")).toBeVisible();
 
   await page.reload();
   await expect(page.getByLabel("Education")).toHaveValue("St Xavier's College, Mumbai");
   await expect(page.getByLabel("Publications")).toHaveValue("Caste and the City (2021)");
+  await expect(page.getByLabel("Website")).toHaveValue("https://asha.example.org");
+});
+
+test("a profile refuses a website that is not a web address", async ({ page }) => {
+  await signUp(page, uniqueEmail());
+  await openProfile(page);
+
+  await page.getByLabel("Website").fill("javascript:alert(1)");
+  await page.getByRole("button", { name: "Save Profile" }).click();
+
+  await expect(page.getByText("Enter a valid website address")).toBeVisible();
 });
 
 test("a member can upload a profile photo", async ({ page }) => {

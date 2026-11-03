@@ -29,6 +29,7 @@ export async function saveProfile(
     education: input.education ?? null,
     experience: input.experience ?? null,
     publications: input.publications ?? null,
+    website: input.website ?? null,
   };
 
   const [profile] = await db

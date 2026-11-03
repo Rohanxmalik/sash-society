@@ -15,6 +15,13 @@
       "when": 1793623761656,
       "tag": "0001_quiet_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793651649981,
+      "tag": "0002_messy_firebird",
+      "breakpoints": true
     }
   ]
 }
