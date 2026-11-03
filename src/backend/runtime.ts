@@ -6,9 +6,11 @@ import type { PaymentDeps } from "@/backend/payments/deps";
 import { createFakeGateway } from "@/backend/payments/fake-gateway";
 import type { Gateway } from "@/backend/payments/gateway";
 import { createRazorpayGateway } from "@/backend/payments/razorpay";
+import { createVisitCounter, type VisitCounter } from "@/backend/visits/counter";
 
 let mailer: SendEmail | undefined;
 let gateway: Gateway | undefined;
+let visitCounter: VisitCounter | undefined;
 
 export function getMailer(): SendEmail {
   if (mailer) return mailer;
@@ -35,6 +37,11 @@ function getGateway(): Gateway {
         })
       : createFakeGateway();
   return gateway;
+}
+
+export function getVisitCounter(): VisitCounter {
+  visitCounter ??= createVisitCounter({ db: getDb() });
+  return visitCounter;
 }
 
 export function getPaymentDeps(): PaymentDeps {

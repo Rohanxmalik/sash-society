@@ -8,6 +8,7 @@ import { Container } from "@/frontend/components/ui/container";
 import { ScrollAnimate } from "@/frontend/components/ui/scroll-animate";
 import { SocialIcon, type SocialNetwork } from "@/frontend/components/ui/social-icon";
 import { siteConfig } from "@/shared/site-config";
+import { VisitorCounter } from "./visitor-counter";
 
 const quickLinks = [
   { label: "About Us", href: "/about" },
@@ -240,7 +241,10 @@ export function Footer() {
                 ))}
               </div>
             </div>
-            <CreditLink />
+            <div className="flex flex-col items-center gap-2 md:items-end">
+              <VisitorCounter />
+              <CreditLink />
+            </div>
           </div>
         </Container>
       </div>

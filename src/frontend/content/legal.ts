@@ -43,7 +43,7 @@ export const privacyPolicy: LegalDocument = {
     {
       heading: "The Public Members List",
       paragraphs: [
-        "If you are an active member, your name and designation appear in the public members list on this website. You can turn this off at any time on your profile page. Your email, phone number and other details are never shown there.",
+        "If you are an active member, your name, membership type, designation and institution appear in the public members list on this website. You can turn this off at any time on your profile page. Your email, phone number and other details are never shown there.",
       ],
     },
     {
@@ -56,7 +56,7 @@ export const privacyPolicy: LegalDocument = {
     {
       heading: "Cookies",
       paragraphs: [
-        "We use only the cookies needed to keep you logged in. We do not use advertising or tracking cookies.",
+        "We use only the cookies needed to keep you logged in. We do not use advertising or tracking cookies. To count visitors, your browser remembers the date of your last visit. This is not linked to you.",
       ],
     },
     {

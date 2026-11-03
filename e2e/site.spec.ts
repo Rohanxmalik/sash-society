@@ -100,6 +100,192 @@ test.describe("GenosAI credit", () => {
   });
 });
 
+test.describe("homepage", () => {
+  test("leads with the society's name", async ({ page }) => {
+    await page.goto("/");
+
+    const heading = page.getByRole("heading", { level: 1 });
+    await expect(heading).toContainText("SOCIOLOGICAL");
+    await expect(heading).toContainText("SOCIETY");
+    await expect(heading).toContainText("(SASS)");
+    await expect(
+      page.getByRole("main").getByText("Advancing Sociological Research", { exact: true })
+    ).toBeVisible();
+  });
+
+  test("links to every important section", async ({ page }) => {
+    await page.goto("/");
+    const links = page.getByRole("navigation", { name: "Quick links" });
+
+    for (const name of [
+      "Register for Mauritius 2027",
+      "Become a Member",
+      "Members List",
+      "Journal",
+      "Conferences",
+      "Committees",
+      "Photo Gallery",
+      "Achievement Awards",
+    ]) {
+      await expect(links.getByRole("link", { name, exact: true })).toBeVisible();
+    }
+  });
+
+  test("the committees link lands on the committees in About Us", async ({ page }) => {
+    await page.goto("/");
+
+    await page
+      .getByRole("navigation", { name: "Quick links" })
+      .getByRole("link", { name: "Committees", exact: true })
+      .click();
+
+    await expect(page).toHaveURL(/\/about#committees$/);
+    await expect(page.getByRole("heading", { name: "Our Committees" })).toBeVisible();
+  });
+});
+
+test.describe("About Us", () => {
+  test("shows the International Committee first", async ({ page }) => {
+    await page.goto("/about");
+
+    await expect(page.getByText("Prof. Roberto Cipriani")).toBeAttached();
+  });
+
+  for (const [tab, member] of [
+    ["Advisory", "Prof. K. L. Sharma"],
+    ["National", "Prof. Bibhuti Bhushan Malik"],
+    ["Regional", "Dr. Swati D Khairnar"],
+  ]) {
+    test(`shows the ${tab} Committee with photos`, async ({ page }) => {
+      await page.goto("/about");
+
+      await page.getByRole("button", { name: tab, exact: true }).click();
+
+      const photo = page.getByRole("img", { name: member, exact: true });
+      await photo.scrollIntoViewIfNeeded();
+      await expect(photo).toBeVisible();
+      await expect
+        .poll(() => photo.evaluate((image: HTMLImageElement) => image.naturalWidth))
+        .toBeGreaterThan(0);
+    });
+  }
+});
+
+test.describe("conference brochures", () => {
+  const CONFERENCES = [
+    ["1st-international-conference", "Sociology in South Asia"],
+    ["2nd-international-conference", "South Asian Society: Today and Tomorrow"],
+    ["3rd-international-conference", "Science, Technology, and Society"],
+    ["mauritius-2027", "Artificial Intelligence and Society"],
+  ];
+
+  for (const [id, theme] of CONFERENCES) {
+    test(`${id} has a page with Save as PDF`, async ({ page }) => {
+      await page.goto(`/conferences/${id}`);
+
+      await expect(page.getByRole("main")).toContainText(theme);
+      await expect(page.getByRole("button", { name: "Save as PDF" })).toBeVisible();
+    });
+  }
+
+  test("each conference card opens its brochure", async ({ page }) => {
+    await page.goto("/conferences");
+
+    await expect(page.getByRole("link", { name: "View Brochure" })).toHaveCount(4);
+    await page.getByRole("link", { name: "View Brochure" }).nth(2).click();
+
+    await expect(page).toHaveURL(/\/conferences\/2nd-international-conference$/);
+  });
+
+  test("past conferences also link from Previous Events", async ({ page }) => {
+    await page.goto("/events/previous");
+
+    await expect(page.getByRole("link", { name: "View Brochure" })).toHaveCount(3);
+  });
+
+  test("Save as PDF opens the browser's print window", async ({ page }) => {
+    await page.addInitScript(() => {
+      const counted = window as unknown as { prints: number };
+      counted.prints = 0;
+      window.print = () => {
+        counted.prints += 1;
+      };
+    });
+    await page.goto("/conferences/2nd-international-conference");
+    await page.waitForLoadState("networkidle");
+
+    await page.getByRole("button", { name: "Save as PDF" }).click();
+
+    expect(
+      await page.evaluate(() => (window as unknown as { prints: number }).prints)
+    ).toBe(1);
+  });
+
+  test("the saved copy leaves out the site's menus and buttons", async ({ page }) => {
+    await page.goto("/conferences/3rd-international-conference");
+    await page.emulateMedia({ media: "print" });
+
+    await expect(page.getByRole("banner")).toBeHidden();
+    await expect(page.getByRole("contentinfo")).toBeHidden();
+    await expect(page.getByRole("button", { name: "Save as PDF" })).toBeHidden();
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("the Dubai page lists its four special lectures", async ({ page }) => {
+    await page.goto("/conferences/2nd-international-conference");
+
+    for (const title of [
+      "Globalisation and its Impact on Indian Society",
+      "Practice of Sociology in South Asia: Some Converging Themes",
+      "Ambedkarism: Philosophy, Epistemology, and Theory",
+      "Explaining Culture: As an Interpretive and Pragmatic Phenomenon",
+    ]) {
+      await expect(page.getByRole("heading", { name: title })).toBeVisible();
+    }
+  });
+
+  test("a past brochure shows no bank or registration details", async ({ page }) => {
+    await page.goto("/conferences/3rd-international-conference");
+
+    const text = await page.getByRole("main").innerText();
+
+    expect(text).not.toContain("IFSC");
+    expect(text).not.toContain("Account");
+    expect(text).not.toContain("gmail");
+  });
+
+  test("an unknown conference is not found", async ({ page }) => {
+    const response = await page.goto("/conferences/not-a-conference");
+
+    expect(response?.status()).toBe(404);
+  });
+});
+
+test.describe("visitor counter", () => {
+  const counter = (page: Page) =>
+    page.getByRole("contentinfo").getByText("Total Visitors");
+
+  test("the footer shows the total", async ({ page }) => {
+    await page.goto("/about");
+
+    await expect(counter(page)).toContainText(/\d/);
+  });
+
+  test("a browser is counted once a day, however often it reloads", async ({ page }) => {
+    const counted: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().endsWith("/api/visits")) counted.push(request.method());
+    });
+
+    await page.goto("/about");
+    await expect(counter(page)).toContainText(/\d/);
+    await page.reload();
+    await expect(counter(page)).toContainText(/\d/);
+
+    expect(counted.filter((method) => method === "POST")).toHaveLength(1);
+  });
+});
+
 test("the only email address on the site is the society's", async ({ page }) => {
   await page.goto("/contact");
 
