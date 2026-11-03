@@ -42,15 +42,16 @@ export const upcomingEvents: Event[] = [
 export const previousEvents: Event[] = [
   {
     id: "3rd-international-conference",
-    title: "3rd International Conference of SASS - Singapore 2026",
+    title: "3rd International Conference of SASS - Singapore & Malaysia 2026",
     theme:
-      "Science, Technology, Society: Rethinking Knowledge, Power, Innovation for an Inclusive and Sustainable Future",
+      "Science, Technology, and Society: Rethinking Knowledge, Power, and Innovation for an Inclusive and Sustainable Future",
     date: "2026-03-08",
     endDate: "2026-03-13",
-    location: "Singapore",
+    location: "Singapore & Malaysia",
     format: "hybrid",
     status: "completed",
-    image: "/images/events/singapore-2026.svg",
+    image: "/images/events/singapore-malaysia-2026.jpg",
+    galleryLink: "/conferences/gallery",
   },
   {
     id: "2nd-international-conference",
@@ -63,20 +64,21 @@ export const previousEvents: Event[] = [
     status: "completed",
     brochureUrl:
       "/documents/dubai-conference-brochure.pdf",
-    image: "/images/events/dubai-2025.png",
+    image: "/images/events/dubai-2025.jpg",
     galleryLink: "/conferences/gallery",
   },
   {
     id: "1st-international-conference",
-    title: "1st International Conference of SASS - Online 2024",
-    theme: "Social Change",
-    date: "2024-03-01",
+    title: "1st International Conference of SASS - Online 2023",
+    theme: "Sociology in South Asia",
+    date: "2023-11-28",
+    endDate: "2023-11-29",
     location: "Online",
     format: "online",
     status: "completed",
     brochureUrl:
       "/documents/south-asia-conference-brochure.pdf",
-    image: "/images/events/online-2024.png",
+    image: "/images/events/online-2023.jpg",
     galleryLink: "/conferences/gallery",
   },
 ];

@@ -48,3 +48,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# originals sent by the client; the web versions live in public/images
+/saassociety photos/

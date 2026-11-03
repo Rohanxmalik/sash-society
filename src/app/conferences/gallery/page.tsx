@@ -13,13 +13,18 @@ export const metadata: Metadata = {
 // Drop photos into these folders under public/ and rebuild.
 const GALLERY_SOURCES = [
   {
+    id: "3rd",
+    label: "3rd Conference (Singapore & Malaysia 2026)",
+    folder: "images/conferences/3rd-conference",
+  },
+  {
     id: "2nd",
     label: "2nd Conference (Dubai 2025)",
     folder: "images/conferences/2nd-conference",
   },
   {
     id: "1st",
-    label: "1st Conference (2024)",
+    label: "1st Conference (Online 2023)",
     folder: "images/conferences/1st-conference",
   },
 ];

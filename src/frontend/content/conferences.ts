@@ -3,9 +3,9 @@ import type { Conference } from "@/shared/types";
 export const conferenceChronology: Conference[] = [
   {
     number: "I",
-    year: "2024",
+    year: "2023",
     venue: "Online Conference",
-    theme: "Social Change",
+    theme: "Sociology in South Asia",
   },
   {
     number: "II",
@@ -16,9 +16,9 @@ export const conferenceChronology: Conference[] = [
   {
     number: "III",
     year: "2026",
-    venue: "Singapore",
+    venue: "Singapore & Malaysia",
     theme:
-      "Contemporary Social Transformations: Challenges, Opportunities, and the Way Forward",
+      "Science, Technology, and Society: Rethinking Knowledge, Power, and Innovation for an Inclusive and Sustainable Future",
   },
   {
     number: "IV",

@@ -68,7 +68,7 @@ Schema is in `src/backend/db/schema/`.
 | Table | Holds |
 |---|---|
 | `user`, `session`, `account`, `verification`, `rate_limit` | Better Auth. `user.banned` is how a member is removed. |
-| `profiles` | Name, phone, designation, education, experience, publications, photo, members list opt-out |
+| `profiles` | Name, phone, designation, education, experience, publications, website, photo, members list opt-out |
 | `memberships` | Plan, status, member number, dates. A partial unique index allows one live membership per person. |
 | `event_registrations` | One row per attempt. A partial unique index allows one confirmed registration per email per event. |
 | `payments` | One row per Razorpay order, for either a membership or a registration |
@@ -189,8 +189,11 @@ CSV exports have a BOM so Excel reads Indian names correctly, and formula-like c
 | Certificate wording and signatories, email text, GST number, membership term, first member number | `src/shared/client-config.ts` |
 | Certificate images | `public/certificate/` |
 | Journal article types | `src/shared/validation/journal.ts` |
-| Gallery photos | `public/images/conferences/1st-conference/` and `2nd-conference/`, then redeploy |
+| Gallery photos | `public/images/conferences/1st-conference/`, `2nd-conference/` and `3rd-conference/`, then redeploy. Files show in name order. |
+| Achievement awards | `src/frontend/content/awards.ts` |
 | Policies | `src/frontend/content/legal.ts`, and update `LEGAL_UPDATED_ON` |
+| Society email, social links, footer credit | `src/shared/site-config.ts`. A social link set to `#` shows the icon but goes nowhere. |
+| Scroll animation | `src/frontend/components/layout/scroll-reveal.tsx` runs on every page from the root layout. Anything using `ScrollAnimate`, or marked `data-scroll-animated`, is left alone. |
 | Who is an admin | `ADMIN_EMAILS` on Render |
 
 Past receipts keep their amount because the price is copied to the `payments` row at the time of payment.

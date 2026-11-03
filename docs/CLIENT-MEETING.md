@@ -25,7 +25,7 @@ Everything to get from SASS so the site can go live. Ask in this order: the firs
 ### 3. Who manages the site
 
 - [ ] Which email addresses get admin access?
-- [ ] Which inbox should receive contact form messages? It is `southasiansociety2@gmail.com` now.
+- [ ] Who reads `info@sass-socio.org`? Contact form messages, journal submissions and member replies all arrive there.
 
 ### 4. Who pays the running costs
 
@@ -96,11 +96,11 @@ Have someone at SASS read the four policy pages. They were drafted by us and hav
 - [ ] List of anyone **already registered for Mauritius** through the Google Form or by bank transfer. They are not in the new system. Decide whether to add them by hand or keep that list alongside.
 - [ ] **Journal:** existing issues of Explorations as PDFs, with title, authors and date. They are added at `/admin` → Journal.
 - [ ] **Journal access:** reading now needs a login, so the page no longer says "open-access". If Explorations is officially registered as open access, tell us and we will change this.
-- [ ] Conference photos for the gallery. The old photo links point to the unregistered domain, so the gallery shows "coming soon" until we have them.
+- [ ] A photo of Prof. Rajen Suntoo receiving the Lifetime Achievement Award. The award page only has one of Prof. S. Gurusamy.
 
 ## Things to tell them
 
 - [ ] **Brochure IFSC is wrong.** It prints `UTIB000177`, one digit short. Public listings show `UTIB0001773`. Please check with the bank. Bank details are not on the website.
-- [ ] **Two Singapore themes.** The site shows two different themes for the 2026 Singapore conference. Which is correct?
+- [ ] **First conference date.** The site said 2024, "Social Change". The client's programme and photos show 28-29 November 2023, "Sociology in South Asia", so it now says that. Please confirm. The site also says the society was established in January 2025, which is after this conference, so please check that date too.
 - [ ] **Admin training.** Removing a member does not refund them. Refunds for anything except a rejected application are done in Razorpay.
 - [ ] **No uploads for ID proof.** Life India and Student applicants tick a declaration at launch and upload nothing. The society can ask for proof by email.
