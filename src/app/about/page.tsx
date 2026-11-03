@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/frontend/components/ui/page-hero";
 import { Container } from "@/frontend/components/ui/container";
 import { SectionHeading } from "@/frontend/components/ui/section-heading";
+import { CommitteeTabs } from "@/frontend/components/committees/committee-tabs";
 import { Card } from "@/frontend/components/ui/card";
 import { BookOpen, Users, Globe, GraduationCap, Newspaper, Mic } from "lucide-react";
 
@@ -153,6 +154,21 @@ export default function AboutPage() {
               </Card>
             ))}
           </div>
+        </Container>
+      </section>
+
+      {/* Committees */}
+      <section
+        id="committees"
+        className="scroll-mt-20 border-t border-ink/10 py-24 lg:py-32"
+      >
+        <Container>
+          <SectionHeading
+            label="Our People"
+            title="Our Committees"
+            description="The members who guide and support the work of the Society."
+          />
+          <CommitteeTabs />
         </Container>
       </section>
     </>

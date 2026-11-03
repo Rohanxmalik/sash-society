@@ -13,7 +13,7 @@ export function HeroBanner() {
 
   return (
     <>
-      <section className="relative min-h-screen flex flex-col justify-center bg-cream overflow-hidden pt-20">
+      <section className="relative min-h-screen flex flex-col justify-center bg-cream overflow-hidden pt-24">
         {/* Decorative grid lines */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-y-0 left-[10%] w-px bg-ink/[0.04]" />
@@ -59,24 +59,24 @@ export function HeroBanner() {
               animate={{ width: 32 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             />
-            South Asian Sociological Society
+            Advancing Sociological Research
           </motion.p>
 
           {/* Giant Heading with letter-by-letter blur reveal */}
-          <h1 className="text-5xl font-black tracking-tight text-ink sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-heading leading-[0.9]">
-            <LetterReveal text="ADVANCING" delay={0.4} />
+          <h1 className="text-5xl font-black tracking-tight text-ink sm:text-6xl md:text-7xl lg:text-8xl xl:text-[min(8rem,14vh)] font-heading leading-[0.9]">
+            <LetterReveal text="SOUTH ASIAN" delay={0.4} />
             <br />
             <LetterReveal text="SOCIOLOGICAL" delay={0.7} />
             <br />
-            <span className="inline-flex">
-              <LetterReveal text="RESEARCH" delay={1.0} />
+            <span className="inline-flex flex-wrap items-baseline gap-x-[0.3em]">
+              <LetterReveal text="SOCIETY" delay={1.0} />
               <motion.span
-                initial={{ opacity: 0, scale: 0 }}
+                initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 1.35, type: "spring", stiffness: 300 }}
-                className="text-brand-gold"
+                className="text-brand-dark-teal"
               >
-                .
+                (SASS)
               </motion.span>
             </span>
           </h1>
