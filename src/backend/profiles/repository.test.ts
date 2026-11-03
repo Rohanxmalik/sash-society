@@ -171,6 +171,20 @@ describe("listDirectory", () => {
 
     const [row] = await listDirectory(db(), NOW);
 
-    expect(Object.keys(row).sort()).toEqual(["designation", "fullName"]);
+    expect(Object.keys(row).sort()).toEqual([
+      "designation",
+      "fullName",
+      "institution",
+      "planSlug",
+    ]);
+  });
+
+  test("shows the membership plan and institution", async () => {
+    await addLiveMembership(harness, "user-1");
+
+    const [row] = await listDirectory(db(), NOW);
+
+    expect(row.institution).toBe("University of Delhi");
+    expect(row.planSlug).toBeTruthy();
   });
 });

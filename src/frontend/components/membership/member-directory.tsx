@@ -2,21 +2,36 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { Badge } from "@/frontend/components/ui/badge";
 
-type DirectoryEntry = { fullName: string; designation: string };
+export type DirectoryEntry = {
+  fullName: string;
+  memberType: string;
+  designation: string;
+  institution: string;
+};
+
+const ALL_TYPES = "All Members";
 
 const matches = (entry: DirectoryEntry, query: string) =>
-  `${entry.fullName} ${entry.designation}`.toLowerCase().includes(query);
+  `${entry.fullName} ${entry.designation} ${entry.institution}`
+    .toLowerCase()
+    .includes(query);
 
 export function MemberDirectory({ members }: { members: DirectoryEntry[] }) {
   const [query, setQuery] = useState("");
-  const visible = members.filter((entry) =>
-    matches(entry, query.trim().toLowerCase())
+  const [type, setType] = useState(ALL_TYPES);
+
+  const types = [...new Set(members.map((entry) => entry.memberType))].sort();
+  const visible = members.filter(
+    (entry) =>
+      (type === ALL_TYPES || entry.memberType === type) &&
+      matches(entry, query.trim().toLowerCase())
   );
 
   return (
     <>
-      <div className="max-w-md mx-auto mb-12">
+      <div className="max-w-md mx-auto mb-6">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
           <input
@@ -25,10 +40,32 @@ export function MemberDirectory({ members }: { members: DirectoryEntry[] }) {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search members..."
             aria-label="Search members"
-            className="w-full border border-ink/20 rounded-sm pl-12 pr-4 py-3 text-sm bg-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-colors"
+            className="w-full border border-ink/20 rounded-sm pl-12 pr-4 py-3 text-sm bg-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal"
           />
         </div>
       </div>
+
+      <div className="flex flex-wrap justify-center gap-2 mb-3">
+        {[ALL_TYPES, ...types].map((label) => (
+          <button
+            key={label}
+            type="button"
+            aria-pressed={label === type}
+            onClick={() => setType(label)}
+            className={`px-4 py-2 text-sm font-medium rounded-full border transition-all duration-300 ${
+              label === type
+                ? "bg-brand-dark-teal text-white border-brand-dark-teal shadow-md"
+                : "bg-white text-ink-light border-ink/15 hover:border-brand-dark-teal hover:text-brand-dark-teal hover:shadow-sm"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <p className="mb-10 text-center text-sm text-ink-muted">
+        Showing {visible.length} of {members.length} members
+      </p>
 
       {visible.length > 0 ? (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -38,7 +75,15 @@ export function MemberDirectory({ members }: { members: DirectoryEntry[] }) {
               className="bg-white border border-ink/10 rounded-sm p-5"
             >
               <p className="font-bold text-ink font-heading">{entry.fullName}</p>
-              <p className="mt-1 text-sm text-ink-light">{entry.designation}</p>
+              <Badge variant="outline" className="mt-2">
+                {entry.memberType}
+              </Badge>
+              {entry.designation && (
+                <p className="mt-2 text-sm text-ink-light">{entry.designation}</p>
+              )}
+              {entry.institution && (
+                <p className="mt-1 text-sm text-ink-muted">{entry.institution}</p>
+              )}
             </li>
           ))}
         </ul>

@@ -5,6 +5,7 @@ export type PlanPeriod = "one-time" | "annual" | "4-year";
 export interface MembershipPlan {
   slug: string;
   name: string;
+  memberType: string;
   amountMinor: number;
   currency: Currency;
   period: PlanPeriod;
@@ -21,6 +22,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "life-india",
     name: "Life Membership (India)",
+    memberType: "Life Member",
     amountMinor: 1_000_000,
     currency: "INR",
     period: "one-time",
@@ -41,6 +43,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "life-south-asia",
     name: "Life Membership (South Asia)",
+    memberType: "Life Member",
     amountMinor: 11_600,
     currency: "USD",
     period: "one-time",
@@ -59,6 +62,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "life-abroad",
     name: "Life Membership (Abroad)",
+    memberType: "Life Member",
     amountMinor: 30_000,
     currency: "USD",
     period: "one-time",
@@ -77,6 +81,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "individual",
     name: "Individual Membership",
+    memberType: "Individual Member",
     amountMinor: 300_000,
     currency: "INR",
     period: "4-year",
@@ -95,6 +100,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "ordinary",
     name: "Ordinary Membership",
+    memberType: "Ordinary Member",
     amountMinor: 100_000,
     currency: "INR",
     period: "annual",
@@ -113,6 +119,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "student",
     name: "Student Membership",
+    memberType: "Student Member",
     amountMinor: 50_000,
     currency: "INR",
     period: "annual",
@@ -131,6 +138,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "institutional",
     name: "Institutional Membership",
+    memberType: "Institutional Member",
     amountMinor: 1_000_000,
     currency: "INR",
     period: "one-time",
@@ -149,6 +157,7 @@ export const membershipPlans: MembershipPlan[] = [
   {
     slug: "societies",
     name: "Social Science Societies",
+    memberType: "Affiliated Society",
     amountMinor: 100_000,
     currency: "INR",
     period: "annual",
@@ -168,6 +177,12 @@ export const membershipPlans: MembershipPlan[] = [
 
 export const findPlan = (slug: string | null | undefined) =>
   membershipPlans.find((plan) => plan.slug === slug);
+
+export const memberTypeOf = (slug: string | null | undefined) =>
+  findPlan(slug)?.memberType ?? "Member";
+
+// Used when the society's records give no designation for a member.
+export const DEFAULT_DESIGNATION = "Member";
 
 export const periodLabel = (period: PlanPeriod) =>
   ({

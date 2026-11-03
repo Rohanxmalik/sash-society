@@ -67,6 +67,8 @@ export async function listDirectory(db: Db, now: Date) {
     .select({
       fullName: profiles.fullName,
       designation: profiles.designation,
+      institution: profiles.institution,
+      planSlug: memberships.planSlug,
     })
     .from(memberships)
     .innerJoin(profiles, eq(profiles.userId, memberships.userId))

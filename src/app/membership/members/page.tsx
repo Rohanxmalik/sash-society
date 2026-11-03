@@ -3,6 +3,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { getDb } from "@/backend/db";
 import { listDirectory } from "@/backend/profiles/repository";
+import { DEFAULT_DESIGNATION, memberTypeOf } from "@/shared/plans";
 import { MemberDirectory } from "@/frontend/components/membership/member-directory";
 import { Container } from "@/frontend/components/ui/container";
 import { PageHero } from "@/frontend/components/ui/page-hero";
@@ -15,7 +16,13 @@ export const metadata: Metadata = {
 export default async function MembersListPage() {
   // Runs per request, so `next build` does not need the database.
   await connection();
-  const members = await listDirectory(getDb(), new Date());
+  const rows = await listDirectory(getDb(), new Date());
+  const members = rows.map((row) => ({
+    fullName: row.fullName,
+    memberType: memberTypeOf(row.planSlug),
+    designation: row.designation === DEFAULT_DESIGNATION ? "" : row.designation,
+    institution: row.institution ?? "",
+  }));
 
   return (
     <>
