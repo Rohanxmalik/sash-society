@@ -3,6 +3,7 @@ import { Radio_Canada, Radio_Canada_Big, Pathway_Gothic_One } from "next/font/go
 import "./globals.css";
 import { Header } from "@/frontend/components/layout/header";
 import { Footer } from "@/frontend/components/layout/footer";
+import { ScrollReveal } from "@/frontend/components/layout/scroll-reveal";
 import { Preloader } from "@/frontend/components/ui/preloader";
 
 const radioCanada = Radio_Canada({
@@ -62,6 +63,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ScrollReveal />
       </body>
     </html>
   );

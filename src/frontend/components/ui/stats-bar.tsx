@@ -9,7 +9,7 @@ export function StatsBar() {
   return (
     <div className="border-t border-ink/10 bg-cream py-10">
       <Container>
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        <div data-scroll-animated className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {siteConfig.stats.map((stat, index) => (
             <motion.div
               key={stat.label}

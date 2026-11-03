@@ -73,8 +73,57 @@ html {
   outline-offset: 2px;
 }
 
+/* Set by ScrollReveal. Timing matches ScrollAnimate. */
+[data-reveal="hidden"] {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+[data-reveal="shown"] {
+  transition:
+    opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@media print {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Footer credit: solid gold at rest, with one slow sweep of light. */
+.credit-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--color-brand-gold) 42%,
+    var(--color-brand-gold-light) 50%,
+    var(--color-brand-gold) 58%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: credit-shimmer 6s ease-in-out infinite;
+}
+
+@keyframes credit-shimmer {
+  0%,
+  65% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
+  .credit-shimmer {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {

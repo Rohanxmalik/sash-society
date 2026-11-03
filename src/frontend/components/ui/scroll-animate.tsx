@@ -59,6 +59,7 @@ export function ScrollAnimate({
 }) {
   return (
     <motion.div
+      data-scroll-animated
       initial="hidden"
       whileInView="visible"
       viewport={{ once, margin: "-80px" }}
@@ -86,6 +87,7 @@ export function StaggerContainer({
 }) {
   return (
     <motion.div
+      data-scroll-animated
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-80px" }}
