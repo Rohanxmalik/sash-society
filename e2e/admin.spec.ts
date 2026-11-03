@@ -16,7 +16,7 @@ async function joinAs(page: Page, email: string, planName: string) {
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: /^Pay / }).click();
   await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
-  await expect(page).toHaveURL("/", { timeout: 15_000 });
+  await expect(page).toHaveURL("/");
 }
 
 test("a member cannot open the admin panel or its exports", async ({ page }) => {
@@ -139,7 +139,7 @@ test("the admin sees event registrations and exports them", async ({ page }) => 
   await page.getByLabel("Designation").fill("Assistant Professor");
   await page.getByRole("button", { name: /^Pay / }).click();
   await expect(page.getByRole("heading", { name: "You Are Registered" })).toBeVisible();
-  await expect(page).toHaveURL("/", { timeout: 15_000 });
+  await expect(page).toHaveURL("/");
 
   await signInAsAdmin(page);
   await page

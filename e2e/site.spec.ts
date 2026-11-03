@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { mailSentTo, uniqueEmail } from "./helpers";
 
 test("the contact form reaches the society", async ({ page }) => {
@@ -14,8 +14,185 @@ test("the contact form reaches the society", async ({ page }) => {
 
   await expect(page.getByText("Thank you for your message")).toBeVisible();
   await expect
-    .poll(() => mailSentTo("southasiansociety2@gmail.com").some((m) => m.text.includes(email)))
+    .poll(() => mailSentTo("info@sass-socio.org").some((m) => m.text.includes(email)))
     .toBe(true);
+});
+
+test("the footer links to every social profile", async ({ page }) => {
+  await page.goto("/");
+  const footer = page.getByRole("contentinfo");
+
+  for (const name of ["X", "Instagram", "Facebook", "LinkedIn", "YouTube"]) {
+    await expect(footer.getByRole("link", { name, exact: true })).toBeVisible();
+  }
+});
+
+test("a social link with no profile yet stays on the page", async ({ page }) => {
+  await page.goto("/about");
+
+  const link = page
+    .getByRole("contentinfo")
+    .getByRole("link", { name: "Instagram", exact: true });
+  await expect(link).not.toHaveAttribute("target", "_blank");
+  await link.click();
+
+  await expect(page).toHaveURL(/\/about$/);
+});
+
+test("the footer credits GenosAI with a link to its website", async ({ page }) => {
+  await page.goto("/");
+
+  const credit = page.getByRole("contentinfo").getByRole("link", { name: "GenosAI" });
+
+  await expect(credit).toHaveAttribute("href", "https://genosai.tech");
+  await expect(page.getByRole("contentinfo")).toContainText(
+    "Designed and developed by GenosAI"
+  );
+});
+
+test.describe("GenosAI credit", () => {
+  const credit = (page: Page) =>
+    page.getByRole("contentinfo").getByRole("link", { name: /GenosAI/ });
+  const shimmerAnimation = (page: Page) =>
+    credit(page)
+      .getByText("GenosAI", { exact: true })
+      .evaluate((name) => getComputedStyle(name).animationName);
+
+  test("sits at the bottom right on one line", async ({ page }) => {
+    await page.goto("/about");
+    await credit(page).scrollIntoViewIfNeeded();
+
+    const box = (await credit(page).boundingBox())!;
+    const copyright = (await page.getByText("All rights reserved").boundingBox())!;
+    const { width } = page.viewportSize()!;
+
+    expect(box.x).toBeGreaterThan(width / 2);
+    expect(box.y + box.height).toBeGreaterThan(copyright.y);
+    expect(box.height).toBeLessThan(50);
+  });
+
+  test("the name shimmers", async ({ page }) => {
+    await page.goto("/about");
+
+    expect(await shimmerAnimation(page)).toBe("credit-shimmer");
+  });
+
+  test("stays still for visitors who prefer less motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/about");
+
+    expect(await shimmerAnimation(page)).toBe("none");
+  });
+
+  test("fits on a phone without pushing the page sideways", async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/about");
+    await credit(page).scrollIntoViewIfNeeded();
+
+    const box = (await credit(page).boundingBox())!;
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth
+    );
+
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(360);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+});
+
+test("the only email address on the site is the society's", async ({ page }) => {
+  await page.goto("/contact");
+
+  const mailLinks = await page
+    .locator('a[href^="mailto:"]')
+    .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+
+  expect(new Set(mailLinks)).toEqual(new Set(["mailto:info@sass-socio.org"]));
+});
+
+test("the journal shows its featured publication as coming soon", async ({
+  page,
+}) => {
+  await page.goto("/journal");
+
+  await expect(page.getByText("Featured Publication")).toBeVisible();
+  await expect(page.getByText("Coming Soon")).toBeVisible();
+  await expect(page.getByText("Special Edition")).toHaveCount(0);
+  await expect(page.getByText("Primary publication vehicle")).toHaveCount(0);
+});
+
+test.describe("scroll animations", () => {
+  const LONG_PAGES = ["/about", "/constitution", "/membership", "/journal"];
+  const hidden = '[data-reveal="hidden"]';
+
+  async function scrollToBottom(page: Page) {
+    const height = await page.evaluate(() => document.body.scrollHeight);
+    for (let top = 0; top < height; top += 300) {
+      await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), top);
+      await page.waitForTimeout(50);
+    }
+  }
+
+  for (const path of LONG_PAGES) {
+    test(`${path} reveals everything as the visitor scrolls`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator(hidden).first()).toBeAttached();
+
+      await scrollToBottom(page);
+
+      await expect(page.locator(hidden)).toHaveCount(0);
+    });
+  }
+
+  test("the first screen is never hidden", async ({ page }) => {
+    await page.goto("/about");
+    await expect(page.locator(hidden).first()).toBeAttached();
+
+    const animatingOnArrival = await page.locator('[data-reveal="shown"]').count();
+    const tops = await page
+      .locator(hidden)
+      .evaluateAll((blocks) =>
+        blocks.map((block) => block.getBoundingClientRect().top)
+      );
+
+    expect(animatingOnArrival).toBe(0);
+    expect(Math.min(...tops)).toBeGreaterThan(page.viewportSize()!.height);
+  });
+
+  test("visitors who prefer less motion see no animation", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/about");
+    await page.waitForLoadState("networkidle");
+
+    await expect(page.locator("[data-reveal]")).toHaveCount(0);
+  });
+
+  test("animates again after moving to another page", async ({ page }) => {
+    await page.goto("/about");
+    await expect(page.locator(hidden).first()).toBeAttached();
+
+    await page
+      .getByRole("contentinfo")
+      .getByRole("link", { name: "Constitution" })
+      .click();
+    await expect(page).toHaveURL(/\/constitution$/);
+
+    await expect(page.locator(hidden).first()).toBeAttached();
+  });
+
+  test("the home page's own animations are not animated twice", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expect(page.locator("[data-scroll-animated]").first()).toBeAttached();
+    await page.waitForLoadState("networkidle");
+
+    await expect(
+      page.locator(
+        "[data-reveal][data-scroll-animated], [data-reveal] [data-scroll-animated], [data-scroll-animated] [data-reveal]"
+      )
+    ).toHaveCount(0);
+  });
 });
 
 test("the policies a payment provider checks for are all linked in the footer", async ({
@@ -61,6 +238,77 @@ test("the gallery page loads without broken images", async ({ page }) => {
 
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.locator('img[src*="sass-socio.org"]')).toHaveCount(0);
+});
+
+test.describe("conference photos", () => {
+  for (const name of [
+    "3rd Conference (Singapore & Malaysia 2026)",
+    "2nd Conference (Dubai 2025)",
+    "1st Conference (Online 2023)",
+  ]) {
+    test(`the gallery shows photos from the ${name}`, async ({ page }) => {
+      await page.goto("/conferences/gallery");
+
+      await page.getByRole("button", { name, exact: true }).click();
+
+      const first = page.getByRole("img", { name: `${name} - Photo 1`, exact: true });
+      await expect(first).toBeVisible();
+      await expect
+        .poll(() => first.evaluate((image: HTMLImageElement) => image.naturalWidth))
+        .toBeGreaterThan(0);
+    });
+  }
+
+  test("a gallery photo opens larger", async ({ page }) => {
+    await page.goto("/conferences/gallery");
+
+    await page
+      .getByRole("button")
+      .filter({ has: page.getByRole("img") })
+      .first()
+      .click();
+
+    await expect(page.locator(".yarl__slide_current img")).toBeVisible();
+  });
+
+  test("every past conference card has a real photo", async ({ page }) => {
+    await page.goto("/events/previous");
+
+    const images = page.locator("main article img, main .grid img");
+    await expect(images).toHaveCount(3);
+
+    for (let index = 0; index < 3; index += 1) {
+      await images.nth(index).scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          images.nth(index).evaluate((image: HTMLImageElement) => image.naturalWidth)
+        )
+        .toBeGreaterThan(0);
+    }
+  });
+});
+
+test("the chronology gives the true date of the first conference", async ({ page }) => {
+  await page.goto("/conferences/chronology");
+
+  await expect(page.getByText("2023", { exact: true })).toBeVisible();
+  await expect(page.getByText("Sociology in South Asia")).toBeVisible();
+  await expect(page.getByText("Singapore & Malaysia")).toBeVisible();
+  await expect(page.getByText("Social Change", { exact: false })).toHaveCount(0);
+  await expect(page.getByText("Contemporary Social Transformations")).toHaveCount(0);
+});
+
+test("the awards page honours both recipients", async ({ page }) => {
+  await page.goto("/achievement-awards");
+
+  await expect(page.getByRole("heading", { name: "Prof. S. Gurusamy" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Prof. Rajen Suntoo" })).toBeVisible();
+  await expect(page.getByText("Coming Soon")).toHaveCount(0);
+
+  const photo = page.getByRole("img", { name: /Prof\. S\. Gurusamy/ });
+  await expect
+    .poll(() => photo.evaluate((image: HTMLImageElement) => image.naturalWidth))
+    .toBeGreaterThan(0);
 });
 
 test("the health check reports the database is reachable", async ({ request }) => {

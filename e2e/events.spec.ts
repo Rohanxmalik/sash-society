@@ -25,7 +25,7 @@ test("a guest registers for a conference and pays", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "You Are Registered" })
   ).toBeVisible();
-  await expect(page).toHaveURL("/", { timeout: 15_000 });
+  await expect(page).toHaveURL("/");
 
   const mail = await waitForMail(email, /registration/i);
   expect(mail.files).toHaveLength(1);
