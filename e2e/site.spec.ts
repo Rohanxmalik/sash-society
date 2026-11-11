@@ -145,14 +145,23 @@ test.describe("homepage", () => {
 });
 
 test.describe("About Us", () => {
-  test("shows the International Committee first", async ({ page }) => {
+  test("shows the Managing Committee first", async ({ page }) => {
     await page.goto("/about");
 
-    await expect(page.getByText("Prof. Roberto Cipriani")).toBeAttached();
+    await expect(page.getByText("Prof. Mahesh Shukla")).toBeAttached();
+  });
+
+  test("shows initials for a member without a photo", async ({ page }) => {
+    await page.goto("/committees/managing");
+
+    const card = page.getByRole("img", { name: "Prof. Deendayal Bedia", exact: true });
+    await card.scrollIntoViewIfNeeded();
+    await expect(card).toHaveText("DB");
   });
 
   for (const [tab, member] of [
-    ["Advisory", "Prof. K. L. Sharma"],
+    ["Managing", "Prof. Shaikh Mohammad Kais"],
+    ["Advisory", "Prof. S. Gurusamy"],
     ["National", "Prof. Bibhuti Bhushan Malik"],
     ["Regional", "Dr. Swati D Khairnar"],
   ]) {

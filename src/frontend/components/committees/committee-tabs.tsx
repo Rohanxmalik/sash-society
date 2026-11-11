@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { advisoryCommittee } from "@/frontend/content/committees/advisory";
 import { internationalCommittee } from "@/frontend/content/committees/international";
+import { managingCommittee } from "@/frontend/content/committees/managing";
 import { nationalCommittee } from "@/frontend/content/committees/national";
 import { regionalCommittee } from "@/frontend/content/committees/regional";
 import { TeamCard } from "./team-card";
 
 const tabs = [
+  { id: "managing", label: "Managing", members: managingCommittee },
   { id: "advisory", label: "Advisory", members: advisoryCommittee },
   { id: "international", label: "International", members: internationalCommittee },
   { id: "national", label: "National", members: nationalCommittee },
@@ -15,7 +17,7 @@ const tabs = [
 ];
 
 export function CommitteeTabs() {
-  const [activeId, setActiveId] = useState("international");
+  const [activeId, setActiveId] = useState("managing");
   const active = tabs.find((tab) => tab.id === activeId) ?? tabs[0];
 
   return (

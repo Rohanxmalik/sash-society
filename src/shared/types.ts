@@ -4,7 +4,8 @@ export interface CommitteeMember {
   name: string;
   title: string;
   institution: string;
-  image: string;
+  // Members without a photo show their initials instead.
+  image?: string;
   location?: string;
 }
 

@@ -12,8 +12,9 @@ export const navigation: NavItem[] = [
   },
   {
     label: "Committees",
-    href: "/committees/advisory",
+    href: "/committees/managing",
     children: [
+      { label: "Managing Committee", href: "/committees/managing" },
       { label: "Advisory Committee", href: "/committees/advisory" },
       { label: "International Committee", href: "/committees/international" },
       { label: "National Committee", href: "/committees/national" },
