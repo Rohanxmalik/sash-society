@@ -142,7 +142,7 @@ export const mauritius2027Details: ConferenceDetails = {
     {
       role: "Chief Patron",
       members: [
-        "Hon Dr. Reza Saumtally (Director OCEP, Member of Parliament, Mauritius)",
+        "Hon. Dr. Reza Saumtally (Director OCEP, Member of Parliament, Mauritius)",
       ],
     },
     {
@@ -187,22 +187,24 @@ export const mauritius2027Details: ConferenceDetails = {
         "Prof. Uddhab Pyakurel (Nepal)",
         "Prof. Reyaz Ahmad (UAE)",
         "Prof. Noriko Nasukawa (Japan)",
-        "Prof. Munshi (Bangladesh)",
       ],
     },
     {
       role: "State / Regional Committee",
       members: [
-        "Prof. Dindayal Bediya (VC Barkatulla Univ.)",
+        "Prof. Dindayal Bediya (VC Barkatullah Univ.)",
+        "Prof. Mahesh Shukla (Madhya Pradesh)",
         "Prof. R.N. Tripathi (VC JRD State Univ.)",
         "Prof. Pramod Kumar Gupta (Lucknow Univ.)",
-        "Dr. Malaya (Karnataka)",
+        "Dr. Mallayya S. (Karnataka)",
+        "Dr. Mouneshwar Badiger (Karnataka)",
         "Prof. Manjula V. (Karnataka)",
-        "Dr. Manoj Kumar (BHU)",
+        "Dr. Manoj Kumar Verma (BHU)",
+        "Dr. Om Prakash Bhartiya (BHU)",
         "Prof. Tareq Ahmad (J&K)",
         "Prof. Kiran Dangwal (Uttarakhand)",
         "Prof. Priti Sharma (Chhattisgarh)",
-        "Dr. Jayshree Ambewadikar (Gujarat)",
+        "Dr. Jayashree Ambewadikar (Gujarat)",
       ],
     },
     {
