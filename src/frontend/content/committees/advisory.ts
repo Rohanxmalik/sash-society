@@ -25,4 +25,10 @@ export const advisoryCommittee: CommitteeMember[] = [
     institution: "University of Himachal Pradesh, Dharmshala",
     image: "/images/committees/advisory/prof-abha-chauhan.jpg",
   },
+  {
+    name: "Prof. S. Gurusamy",
+    title: "President, Tamilnadu Sociological Association",
+    institution: "SASS Lifetime Achievement Award 2026",
+    image: "/images/committees/advisory/prof-s-gurusamy.jpg",
+  },
 ];
